@@ -8,7 +8,7 @@ type IntSet []Int
 
 func (set *IntSet) Add(elem Int) {
 	for _, n := range *set {
-		if (n ^ elem) == 0 {
+		if n == elem {
 			panic(strconv.Itoa(int(elem)) + " " + AlreadyExists)
 		}
 	}

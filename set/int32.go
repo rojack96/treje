@@ -7,7 +7,7 @@ type Int32Set []Int32
 
 func (set *Int32Set) Add(elem Int32) {
 	for _, n := range *set {
-		if (n ^ elem) == 0 {
+		if n == elem {
 			panic(strconv.Itoa(int(elem)) + " " + AlreadyExists)
 		}
 	}

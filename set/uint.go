@@ -7,7 +7,7 @@ type UintSet []Uint
 
 func (set *UintSet) Add(elem Uint) {
 	for _, n := range *set {
-		if (n ^ elem) == 0 {
+		if n == elem {
 			panic(strconv.FormatUint(uint64(elem), 10) + " " + AlreadyExists)
 		}
 	}

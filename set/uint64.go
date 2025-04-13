@@ -7,7 +7,7 @@ type Uint64Set []Uint64
 
 func (set *Uint64Set) Add(elem Uint64) {
 	for _, n := range *set {
-		if (n ^ elem) == 0 {
+		if n == elem {
 			panic(strconv.FormatUint(uint64(elem), 10) + " " + AlreadyExists)
 		}
 	}

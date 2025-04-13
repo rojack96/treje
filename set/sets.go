@@ -23,7 +23,7 @@ func NewInt8Set(elems ...int8) Int8Set {
 	quickSort8(elems, 0, len(elems)-1)
 
 	for i := 1; i < len(elems); i++ {
-		if (elems[i] ^ elems[i-1]) == 0 {
+		if elems[i] == elems[i-1] {
 			panic(HasDuplicates)
 		}
 	}
@@ -50,7 +50,7 @@ func NewInt16Set(elems ...int16) Int16Set {
 	quickSort16(elems, 0, len(elems)-1)
 
 	for i := 1; i < len(elems); i++ {
-		if (elems[i] ^ elems[i-1]) == 0 {
+		if elems[i] == elems[i-1] {
 			panic(HasDuplicates)
 		}
 	}
@@ -77,7 +77,7 @@ func NewInt32Set(elems ...int32) Int32Set {
 	quickSort32(elems, 0, len(elems)-1)
 
 	for i := 1; i < len(elems); i++ {
-		if (elems[i] ^ elems[i-1]) == 0 {
+		if elems[i] == elems[i-1] {
 			panic(HasDuplicates)
 		}
 	}
@@ -104,7 +104,7 @@ func NewInt64Set(elems ...int64) Int64Set {
 	quickSort64(elems, 0, len(elems)-1)
 
 	for i := 1; i < len(elems); i++ {
-		if (elems[i] ^ elems[i-1]) == 0 {
+		if elems[i] == elems[i-1] {
 			panic(HasDuplicates)
 		}
 	}
@@ -131,7 +131,7 @@ func NewIntSet(elems ...int) IntSet {
 	sort.Ints(elems)
 
 	for i := 1; i < len(elems); i++ {
-		if (elems[i] ^ elems[i-1]) == 0 {
+		if elems[i] == elems[i-1] {
 			panic(HasDuplicates)
 		}
 		set = append(set, Int(elems[i]))
@@ -161,7 +161,7 @@ func NewUint8Set(elems ...uint8) Uint8Set {
 	quickSortUnsigned8(elems, 0, len(elems)-1)
 
 	for i := 1; i < len(elems); i++ {
-		if (elems[i] ^ elems[i-1]) == 0 {
+		if elems[i] == elems[i-1] {
 			panic(HasDuplicates)
 		}
 	}
@@ -188,7 +188,7 @@ func NewUint16Set(elems ...uint16) Uint16Set {
 	quickSortUnsigned16(elems, 0, len(elems)-1)
 
 	for i := 1; i < len(elems); i++ {
-		if (elems[i] ^ elems[i-1]) == 0 {
+		if elems[i] == elems[i-1] {
 			panic(HasDuplicates)
 		}
 	}
@@ -215,7 +215,7 @@ func NewUint32Set(elems ...uint32) Uint32Set {
 	quickSortUnsigned32(elems, 0, len(elems)-1)
 
 	for i := 1; i < len(elems); i++ {
-		if (elems[i] ^ elems[i-1]) == 0 {
+		if elems[i] == elems[i-1] {
 			panic(HasDuplicates)
 		}
 	}
@@ -242,7 +242,7 @@ func NewUint64Set(elems ...uint64) Uint64Set {
 	quickSortUnsigned64(elems, 0, len(elems)-1)
 
 	for i := 1; i < len(elems); i++ {
-		if (elems[i] ^ elems[i-1]) == 0 {
+		if elems[i] == elems[i-1] {
 			panic(HasDuplicates)
 		}
 	}
@@ -269,7 +269,7 @@ func NewUintSet(elems ...uint) UintSet {
 	quickSortUnsigned(elems, 0, len(elems)-1)
 
 	for i := 1; i < len(elems); i++ {
-		if (elems[i] ^ elems[i-1]) == 0 {
+		if elems[i] == elems[i-1] {
 			panic(HasDuplicates)
 		}
 	}

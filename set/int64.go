@@ -7,7 +7,7 @@ type Int64Set []Int64
 
 func (set *Int64Set) Add(elem Int64) {
 	for _, n := range *set {
-		if (n ^ elem) == 0 {
+		if n == elem {
 			panic(strconv.Itoa(int(elem)) + " " + AlreadyExists)
 		}
 	}

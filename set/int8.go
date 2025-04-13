@@ -11,7 +11,7 @@ type Int8Set []Int8
 
 func (set *Int8Set) Add(elem Int8) {
 	for _, n := range *set {
-		if (n ^ elem) == 0 {
+		if n == elem {
 			panic(strconv.Itoa(int(elem)) + " " + AlreadyExists)
 		}
 	}
@@ -22,7 +22,7 @@ func (set *Int8Set) Add(elem Int8) {
 func (set *Int8Set) Remove(elem Int8) {
 	result := *set
 	for i, n := range result {
-		if (n ^ elem) == 0 {
+		if n == elem {
 			*set = append(result[:i], result[i+1:]...)
 			return
 		}
@@ -34,7 +34,7 @@ func (set *Int8Set) Remove(elem Int8) {
 func (set *Int8Set) Discard(elem Int8) Int8Set {
 	result := *set
 	for i, n := range result {
-		if (n ^ elem) == 0 {
+		if n == elem {
 			*set = append(result[:i], result[i+1:]...)
 		}
 	}
@@ -70,7 +70,6 @@ func (set *Int8Set) Intersect(elems Int8Set) Int8Set {
 
 	for i < len(st) && j < len(elems) {
 		if st[i] == elems[j] {
-			// evita duplicati nel risultato
 			if len(result) == 0 || result[len(result)-1] != st[i] {
 				result = append(result, st[i])
 			}
@@ -93,7 +92,7 @@ func (set *Int8Set) Difference(elems Int8Set) Int8Set {
 	for _, elemA := range st {
 		found := false
 		for _, elemB := range elems {
-			if elemA == elemB { // TODO usare XOR
+			if elemA == elemB {
 				found = true
 				break
 			}

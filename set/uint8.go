@@ -7,7 +7,7 @@ type Uint8Set []Uint8
 
 func (set *Uint8Set) Add(elem Uint8) {
 	for _, n := range *set {
-		if (n ^ elem) == 0 {
+		if n == elem {
 			panic(strconv.FormatUint(uint64(elem), 10) + " " + AlreadyExists)
 		}
 	}

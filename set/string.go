@@ -4,16 +4,14 @@ type String string
 
 type StringSet []String
 
-func (set *StringSet) Add(elem String) StringSet {
+func (set *StringSet) Add(elem String) {
 	for _, w := range *set {
-		if w != elem {
-			continue
+		if w == elem {
+			panic(elem + " " + AlreadyExists)
 		}
-		panic(elem + " " + AlreadyExists)
 	}
 
 	*set = append(*set, elem)
-	return *set
 }
 
 func (set *StringSet) ToSlice() []string {

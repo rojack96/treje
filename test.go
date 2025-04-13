@@ -9,7 +9,8 @@ import (
 // -------------------------------------------------------------
 
 func main() {
-	s := set.NewInt8Set([]int8{2, 4, 5, 4, 2}...)
-
+	t := []int8{5, 4, 2, 9}
+	s := set.NewInt8Set(t...)
+	//s.Sort()
 	fmt.Println("s", s)
 }

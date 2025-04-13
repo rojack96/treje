@@ -60,21 +60,23 @@ func (set *Int8Set) Union(elems Int8Set) Int8Set {
 	return *set
 }
 
-/*func (set *Int8Set) Intersect(elems Int8Set) []int {
-	sort.Ints(a)
-	sort.Ints(b)
-	var result []int
+func (set *Int8Set) Intersect(elems Int8Set) Int8Set {
+	st := *set
+	st.Sort()
+	elems.Sort()
+
+	var result Int8Set
 	i, j := 0, 0
 
-	for i < len(a) && j < len(b) {
-		if a[i] == b[j] {
+	for i < len(st) && j < len(elems) {
+		if st[i] == elems[j] {
 			// evita duplicati nel risultato
-			if len(result) == 0 || result[len(result)-1] != a[i] {
-				result = append(result, a[i])
+			if len(result) == 0 || result[len(result)-1] != st[i] {
+				result = append(result, st[i])
 			}
 			i++
 			j++
-		} else if a[i] < b[j] {
+		} else if st[i] < elems[j] {
 			i++
 		} else {
 			j++
@@ -82,7 +84,55 @@ func (set *Int8Set) Union(elems Int8Set) Int8Set {
 	}
 
 	return result
-}*/
+}
+
+func (set *Int8Set) Difference(elems Int8Set) Int8Set {
+	var result Int8Set
+	st := *set
+
+	for _, elemA := range st {
+		found := false
+		for _, elemB := range elems {
+			if elemA == elemB { // TODO usare XOR
+				found = true
+				break
+			}
+		}
+		if !found {
+			result = append(result, elemA)
+		}
+	}
+
+	return result
+}
+
+func (set *Int8Set) Clear() {
+	*set = Int8Set{}
+}
+
+func (set *Int8Set) Min() int {
+	minimum := *set
+	minimum.Sort()
+
+	res := minimum[0]
+	return int(res)
+}
+
+func (set *Int8Set) Max() int {
+	maximum := *set
+	maximum.Sort()
+
+	res := maximum[len(maximum)-1]
+	return int(res)
+}
+
+func (set *Int8Set) Sum() int {
+	total := 0
+	for _, v := range *set {
+		total += int(v)
+	}
+	return total
+}
 
 func (set *Int8Set) Sort() {
 	set.quickSort(*set, 0, len(*set)-1)

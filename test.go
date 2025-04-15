@@ -10,12 +10,12 @@ import (
 
 func main() {
 	t := []int8{5, 4, 2, 9}
-	d := []int8{5, 4, 7, 10}
+	//d := []int8{5, 4, 7, 10}
 	s := set.NewInt8Set(t...)
-	p := set.NewInt8Set(d...)
+	//p := set.NewInt8Set(d...)
 	s.Sort()
 	//x := s.Difference(p)
-	y := p.Difference(s)
+	y := set.NewInt8Set(5)
 	//s.Sort()
 	fmt.Println("s", y)
 }

@@ -2,6 +2,7 @@ package set
 
 import (
 	"math/rand"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -9,6 +10,39 @@ import (
 type Int8 int8
 type Int8Set []Int8
 
+// NewInt8Set - Create a new empty set or from a slice
+func NewInt8Set(elems ...int8) Int8Set {
+	set := Int8Set{}
+
+	if len(elems) == 0 {
+		return set
+	}
+
+	if len(elems) == 1 {
+		return append(set, Int8(elems[0]))
+	}
+
+	elemsCopy := make([]int8, len(elems))
+	copy(elemsCopy, elems)
+
+	sort.Slice(elems, func(i, j int) bool {
+		return elems[i] < elems[j]
+	})
+
+	for i := 1; i < len(elems); i++ {
+		if elems[i] == elems[i-1] {
+			panic(HasDuplicates)
+		}
+	}
+
+	for _, n := range elemsCopy {
+		set = append(set, Int8(n))
+	}
+
+	return set
+}
+
+// Add - Append a new element to the set if and only if it is not already present
 func (set *Int8Set) Add(elem Int8) {
 	for _, n := range *set {
 		if n == elem {
@@ -19,6 +53,7 @@ func (set *Int8Set) Add(elem Int8) {
 	*set = append(*set, elem)
 }
 
+// Remove - Remove a specific element from set
 func (set *Int8Set) Remove(elem Int8) {
 	result := *set
 	for i, n := range result {
@@ -43,16 +78,15 @@ func (set *Int8Set) Discard(elem Int8) Int8Set {
 }
 
 func (set *Int8Set) Pop() Int8Set {
-	result := *set
-	if len(result) == 0 {
-		return result
+	if len(*set) == 0 {
+		return *set
 	}
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	i := r.Intn(len(result))
+	i := r.Intn(len(*set))
 
-	result = append(result[:i], result[i+1:]...)
-	return result
+	*set = append((*set)[:i], (*set)[i+1:]...)
+	return *set
 }
 
 func (set *Int8Set) Union(elems Int8Set) Int8Set {
@@ -61,21 +95,20 @@ func (set *Int8Set) Union(elems Int8Set) Int8Set {
 }
 
 func (set *Int8Set) Intersect(elems Int8Set) Int8Set {
-	st := *set
-	st.Sort()
+	set.Sort()
 	elems.Sort()
 
 	var result Int8Set
 	i, j := 0, 0
 
-	for i < len(st) && j < len(elems) {
-		if st[i] == elems[j] {
-			if len(result) == 0 || result[len(result)-1] != st[i] {
-				result = append(result, st[i])
+	for i < len(*set) && j < len(elems) {
+		if (*set)[i] == elems[j] {
+			if len(result) == 0 || result[len(result)-1] != (*set)[i] {
+				result = append(result, (*set)[i])
 			}
 			i++
 			j++
-		} else if st[i] < elems[j] {
+		} else if (*set)[i] < elems[j] {
 			i++
 		} else {
 			j++
@@ -87,9 +120,8 @@ func (set *Int8Set) Intersect(elems Int8Set) Int8Set {
 
 func (set *Int8Set) Difference(elems Int8Set) Int8Set {
 	var result Int8Set
-	st := *set
 
-	for _, elemA := range st {
+	for _, elemA := range *set {
 		found := false
 		for _, elemB := range elems {
 			if elemA == elemB {
@@ -134,7 +166,9 @@ func (set *Int8Set) Sum() int {
 }
 
 func (set *Int8Set) Sort() {
-	set.quickSort(*set, 0, len(*set)-1)
+	sort.Slice(*set, func(i, j int) bool {
+		return (*set)[i] < (*set)[j]
+	})
 }
 
 func (set *Int8Set) ToSlice() []int8 {
@@ -147,27 +181,4 @@ func (set *Int8Set) ToSlice() []int8 {
 		result[i] = int8(v)
 	}
 	return result
-}
-
-func (set *Int8Set) partition(slice []Int8, low, high int) int {
-	pivot := slice[high]
-	i := low - 1
-
-	for j := low; j < high; j++ {
-		if slice[j] <= pivot {
-			i++
-			slice[i], slice[j] = slice[j], slice[i]
-		}
-	}
-
-	slice[i+1], slice[high] = slice[high], slice[i+1]
-	return i + 1
-}
-
-func (set *Int8Set) quickSort(slice []Int8, low, high int) {
-	if low < high {
-		pivot := set.partition(slice, low, high)
-		set.quickSort(slice, low, pivot-1)
-		set.quickSort(slice, pivot+1, high)
-	}
 }

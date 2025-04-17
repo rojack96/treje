@@ -70,15 +70,14 @@ func (set *Int8Set) Remove(elem Int8) error {
 }
 
 // Discard - Remove a specific element from set
-func (set *Int8Set) Discard(elem Int8) Int8Set {
+func (set *Int8Set) Discard(elem Int8) {
 	result := *set
 	for i, n := range result {
 		if n == elem {
 			*set = append(result[:i], result[i+1:]...)
+			break
 		}
 	}
-
-	return *set
 }
 
 // Pop - Remove and return element from set at a given index (or last if none provided)
@@ -189,12 +188,8 @@ func (set *Int8Set) SymmetricDifference(b Int8Set) (Int8Set, error) {
 	return append(diff1, diff2...), nil
 }
 
-// IsSubset - Returns true if the current set is a subset of the given set b.
-func (set *Int8Set) IsSubset(b Int8Set) bool {
-	if (&b).IsEmpty() {
-		return false
-	}
-
+// IsSubsetOf - Returns true if the current set is a subset of the given set b.
+func (set *Int8Set) IsSubsetOf(b Int8Set) bool {
 	for _, elem := range *set {
 		found := false
 		for _, other := range b {
@@ -212,7 +207,7 @@ func (set *Int8Set) IsSubset(b Int8Set) bool {
 
 // Equals - Returns true if the current set and set b contain the same elements.
 func (set *Int8Set) Equals(b Int8Set) bool {
-	return set.IsSubset(b) && (&b).IsSubset(*set)
+	return set.IsSubsetOf(b) && (&b).IsSubsetOf(*set)
 }
 
 /*

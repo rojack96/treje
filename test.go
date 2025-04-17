@@ -24,6 +24,6 @@ func main() {
 	}
 
 	B.Discard(9)
-	fmt.Println("B unione", B, err)
+	fmt.Println("B unione", B, len(B))
 
 }

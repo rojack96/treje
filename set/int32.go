@@ -55,7 +55,7 @@ func (set *Int32Set) Add(elem Int32) error {
 	return nil
 }
 
-// Remove - Remove a specific element from set, if element not exist raise an error
+// Remove - Remove a specific element from a set, if the element not exists raise an error
 func (set *Int32Set) Remove(elem Int32) error {
 	if set.IsEmpty() {
 		return errors.New(EmptySet)
@@ -80,7 +80,7 @@ func (set *Int32Set) Discard(elem Int32) {
 	}
 }
 
-// Pop - Remove and return element from set at a given index (or last if none provided)
+// Pop - Remove and return element from a set at a given index (or last if none provided)
 func (set *Int32Set) Pop(index ...int) (int32, error) {
 	if set.IsEmpty() {
 		return 0, errors.New(EmptySet)
@@ -214,7 +214,7 @@ func (set *Int32Set) Equals(b Int32Set) bool {
 	Utility methods
 */
 
-// Has - Return true if element is in set, otherwise false
+// Has - Return true if the element is in set, otherwise false
 func (set *Int32Set) Has(elem Int32) bool {
 	for _, n := range *set {
 		if n == elem {
@@ -224,17 +224,17 @@ func (set *Int32Set) Has(elem Int32) bool {
 	return false
 }
 
-// IsEmpty - Return true if set is empty, else false
+// IsEmpty - Return true if the set is empty, else false
 func (set *Int32Set) IsEmpty() bool {
 	return len(*set) == 0
 }
 
-// Clear - Remove all element
+// Clear - Remove all elements
 func (set *Int32Set) Clear() {
 	*set = Int32Set{}
 }
 
-// Min - Return minimum element from set
+// Min - Return minimum element from the set
 func (set *Int32Set) Min() int32 {
 	if set.IsEmpty() {
 		return 0
@@ -247,7 +247,7 @@ func (set *Int32Set) Min() int32 {
 	return int32(res)
 }
 
-// Max - Return maximum element from set
+// Max - Return maximum element from the set
 func (set *Int32Set) Max() int32 {
 	if set.IsEmpty() {
 		return 0
@@ -288,7 +288,7 @@ func (set *Int32Set) ReverseSort() {
 }
 
 /*
-	Methods to manipulate set object
+	Methods to manipulate a set object
 */
 
 func (set *Int32Set) Copy() (Int32Set, error) {

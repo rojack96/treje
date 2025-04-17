@@ -55,7 +55,7 @@ func (set *UintSet) Add(elem Uint) error {
 	return nil
 }
 
-// Remove - Remove a specific element from set, if element not exist raise an error
+// Remove - Remove a specific element from a set, if the element not exists raise an error
 func (set *UintSet) Remove(elem Uint) error {
 	if set.IsEmpty() {
 		return errors.New(EmptySet)
@@ -80,7 +80,7 @@ func (set *UintSet) Discard(elem Uint) {
 	}
 }
 
-// Pop - Remove and return element from set at a given index (or last if none provided)
+// Pop - Remove and return element from a set at a given index (or last if none provided)
 func (set *UintSet) Pop(index ...int) (uint, error) {
 	if set.IsEmpty() {
 		return 0, errors.New(EmptySet)
@@ -214,7 +214,7 @@ func (set *UintSet) Equals(b UintSet) bool {
 	Utility methods
 */
 
-// Has - Return true if element is in set, otherwise false
+// Has - Return true if the element is in set, otherwise false
 func (set *UintSet) Has(elem Uint) bool {
 	for _, n := range *set {
 		if n == elem {
@@ -224,17 +224,17 @@ func (set *UintSet) Has(elem Uint) bool {
 	return false
 }
 
-// IsEmpty - Return true if set is empty, else false
+// IsEmpty - Return true if the set is empty, else false
 func (set *UintSet) IsEmpty() bool {
 	return len(*set) == 0
 }
 
-// Clear - Remove all element
+// Clear - Remove all elements
 func (set *UintSet) Clear() {
 	*set = UintSet{}
 }
 
-// Min - Return minimum element from set
+// Min - Return minimum element from the set
 func (set *UintSet) Min() uint {
 	if set.IsEmpty() {
 		return 0
@@ -247,7 +247,7 @@ func (set *UintSet) Min() uint {
 	return uint(res)
 }
 
-// Max - Return maximum element from set
+// Max - Return maximum element from the set
 func (set *UintSet) Max() uint {
 	if set.IsEmpty() {
 		return 0
@@ -288,7 +288,7 @@ func (set *UintSet) ReverseSort() {
 }
 
 /*
-	Methods to manipulate set object
+	Methods to manipulate a set object
 */
 
 func (set *UintSet) Copy() (UintSet, error) {

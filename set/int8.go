@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-type Int8 int8 // todo to pointer?
+type Int8 *int8
 type Int8Set []Int8
 
 // NewInt8Set - Create a new empty set or from a slice
@@ -18,7 +18,7 @@ func NewInt8Set(elems ...int8) (Int8Set, error) {
 	}
 
 	if len(elems) == 1 {
-		return append(set, Int8(elems[0])), nil
+		return append(set, &elems[0]), nil
 	}
 
 	elemsCopy := make([]int8, len(elems))
@@ -35,7 +35,7 @@ func NewInt8Set(elems ...int8) (Int8Set, error) {
 	}
 
 	for _, n := range elemsCopy {
-		set = append(set, Int8(n))
+		set = append(set, &n)
 	}
 
 	return set, nil
@@ -54,7 +54,7 @@ func (set *Int8Set) Has(elem Int8) bool {
 // Add - Append a new element to the set if and only if it is not already present
 func (set *Int8Set) Add(elem Int8) error {
 	if set.Has(elem) {
-		return errors.New(strconv.Itoa(int(elem)) + " " + AlreadyExists)
+		return errors.New(strconv.Itoa(int(*elem)) + " " + AlreadyExists)
 	}
 
 	*set = append(*set, elem)
@@ -99,7 +99,7 @@ func (set *Int8Set) Pop(index ...int) (int8, error) {
 
 	elem := (*set)[i]
 	*set = append((*set)[:i], (*set)[i+1:]...)
-	return int8(elem), nil
+	return *elem, nil
 }
 
 func (set *Int8Set) Union(elems Int8Set) Int8Set {
@@ -122,7 +122,7 @@ func (set *Int8Set) Intersect(b Int8Set) Int8Set {
 			}
 			i++
 			j++
-		} else if (*set)[i] < b[j] {
+		} else if *(*set)[i] < *b[j] {
 			i++
 		} else {
 			j++
@@ -159,43 +159,47 @@ func (set *Int8Set) Clear() {
 }
 
 // Min - Return minimum element from set
-func (set *Int8Set) Min() int {
+func (set *Int8Set) Min() int8 {
 	minimum := *set
 	minimum.Sort()
 
 	res := minimum[0]
-	return int(res)
+	return *res
 }
 
 // Max - Return maximum element from set
-func (set *Int8Set) Max() int {
+func (set *Int8Set) Max() int8 {
 	maximum := *set
 	maximum.Sort()
 
 	res := maximum[len(maximum)-1]
-	return int(res)
+	return *res
 }
 
 // Sum - Return a sum of all elements
 func (set *Int8Set) Sum() int {
 	total := 0
-	for _, v := range *set {
-		total += int(v)
+
+	if len(*set) > 0 {
+		for _, v := range *set {
+			total += int(*v)
+		}
 	}
+
 	return total
 }
 
 // Sort - Sort element in ascending mode
 func (set *Int8Set) Sort() {
 	sort.Slice(*set, func(i, j int) bool {
-		return (*set)[i] < (*set)[j]
+		return *(*set)[i] < *(*set)[j]
 	})
 }
 
 // ReverseSort - Sort element in descending mode
 func (set *Int8Set) ReverseSort() {
 	sort.Slice(*set, func(i, j int) bool {
-		return (*set)[i] > (*set)[j]
+		return *(*set)[i] > *(*set)[j]
 	})
 }
 
@@ -207,7 +211,7 @@ func (set *Int8Set) ToSlice() []int8 {
 
 	result := make([]int8, len(*set))
 	for i, v := range *set {
-		result[i] = int8(v)
+		result[i] = *v
 	}
 	return result
 }

@@ -87,7 +87,7 @@ func (set *Int8Set) Pop(index ...int) (int8, error) {
 	if len(index) > 0 {
 		i = index[0]
 		if i < 0 || i >= len(*set) {
-			return 0, errors.New("index out of range")
+			return 0, errors.New(IndexOutOfRange)
 		}
 	}
 

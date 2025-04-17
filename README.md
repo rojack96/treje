@@ -8,7 +8,7 @@ A lightweight, idiomatic and extensible collection of data structures in Go.
 
 ✅ Set implementation (e.g. `Int8Set`, `Uint32Set` `StringSet`)  
 ✅ Operations:
-- Manipulation: `Add`, `Remove`, `Discard`, `Pop`, `IsEmpty`
+- Manipulation: `Add`, `Remove`, `Discard`, `Pop`
 - Set operations: `Union`, `Intersection`, `Difference`, `SymmetricDifference`
 - `IsSubsetOf`, `Equals`  
 

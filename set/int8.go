@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-type Int8 *int8
+type Int8 int8
 type Int8Set []Int8
 
 // NewInt8Set - Create a new empty set or from a slice
@@ -18,7 +18,7 @@ func NewInt8Set(elems ...int8) (Int8Set, error) {
 	}
 
 	if len(elems) == 1 {
-		return append(set, &elems[0]), nil
+		return append(set, Int8(elems[0])), nil
 	}
 
 	elemsCopy := make([]int8, len(elems))
@@ -35,7 +35,7 @@ func NewInt8Set(elems ...int8) (Int8Set, error) {
 	}
 
 	for _, n := range elemsCopy {
-		set = append(set, &n)
+		set = append(set, Int8(n))
 	}
 
 	return set, nil
@@ -48,7 +48,7 @@ func NewInt8Set(elems ...int8) (Int8Set, error) {
 // Add - Append a new element to the set if and only if it is not already present
 func (set *Int8Set) Add(elem Int8) error {
 	if set.Has(elem) {
-		return errors.New(strconv.Itoa(int(*elem)) + " " + AlreadyExists)
+		return errors.New(strconv.Itoa(int(elem)) + " " + AlreadyExists)
 	}
 
 	*set = append(*set, elem)
@@ -57,6 +57,10 @@ func (set *Int8Set) Add(elem Int8) error {
 
 // Remove - Remove a specific element from set, if element not exist raise an error
 func (set *Int8Set) Remove(elem Int8) error {
+	if set.IsEmpty() {
+		return errors.New(EmptySet)
+	}
+
 	originalLen := len(*set)
 	set.Discard(elem)
 	if len(*set) == originalLen {
@@ -79,7 +83,7 @@ func (set *Int8Set) Discard(elem Int8) Int8Set {
 
 // Pop - Remove and return element from set at a given index (or last if none provided)
 func (set *Int8Set) Pop(index ...int) (int8, error) {
-	if len(*set) == 0 {
+	if set.IsEmpty() {
 		return 0, errors.New(EmptySet)
 	}
 
@@ -93,20 +97,34 @@ func (set *Int8Set) Pop(index ...int) (int8, error) {
 
 	elem := (*set)[i]
 	*set = append((*set)[:i], (*set)[i+1:]...)
-	return *elem, nil
+	return int8(elem), nil
 }
 
 /*
 	Set operation methods
 */
 
-func (set *Int8Set) Union(b Int8Set) Int8Set {
-	*set = append(*set, b...)
-	return *set
+// Union - Merges the current set with another set, but returns an error
+// if there are any duplicates in the union.
+func (set *Int8Set) Union(b Int8Set) (Int8Set, error) {
+	if (&b).IsEmpty() {
+		return nil, errors.New("cannot union an empty slice")
+	}
+
+	for _, elemB := range b {
+		if set.Has(elemB) {
+			return *set, errors.New(HasDuplicates)
+		}
+		*set = append(*set, elemB)
+	}
+	return *set, nil
 }
 
 // Intersect - Returns the elements that are present in both input sets.
-func (set *Int8Set) Intersect(b Int8Set) Int8Set {
+func (set *Int8Set) Intersect(b Int8Set) (Int8Set, error) {
+	if (&b).IsEmpty() {
+		return nil, errors.New("cannot intersect an empty slice")
+	}
 	set.Sort()
 	b.Sort()
 
@@ -120,20 +138,24 @@ func (set *Int8Set) Intersect(b Int8Set) Int8Set {
 			}
 			i++
 			j++
-		} else if *(*set)[i] < *b[j] {
+		} else if (*set)[i] < b[j] {
 			i++
 		} else {
 			j++
 		}
 	}
 
-	return result
+	return result, nil
 }
 
 // Difference - Returns the elements that are present in the first set
 // but not in the second set.
-func (set *Int8Set) Difference(b Int8Set) Int8Set {
+func (set *Int8Set) Difference(b Int8Set) (Int8Set, error) {
 	var result Int8Set
+
+	if (&b).IsEmpty() {
+		return nil, errors.New("cannot difference an empty slice")
+	}
 
 	for _, elemA := range *set {
 		found := false
@@ -148,19 +170,26 @@ func (set *Int8Set) Difference(b Int8Set) Int8Set {
 		}
 	}
 
-	return result
+	return result, nil
 }
 
 // SymmetricDifference - Returns a new set with elements that are present in either of the two sets but not in both.
-func (set *Int8Set) SymmetricDifference(b Int8Set) Int8Set {
-	diff1 := set.Difference(b)
-	diff2 := (&b).Difference(*set)
+func (set *Int8Set) SymmetricDifference(b Int8Set) (Int8Set, error) {
+	if (&b).IsEmpty() {
+		return nil, errors.New("cannot difference an empty slice")
+	}
+	diff1, _ := set.Difference(b)
+	diff2, _ := (&b).Difference(*set)
 
-	return append(diff1, diff2...)
+	return append(diff1, diff2...), nil
 }
 
 // IsSubset - Returns true if the current set is a subset of the given set b.
 func (set *Int8Set) IsSubset(b Int8Set) bool {
+	if (&b).IsEmpty() {
+		return false
+	}
+
 	for _, elem := range *set {
 		found := false
 		for _, other := range b {
@@ -178,6 +207,9 @@ func (set *Int8Set) IsSubset(b Int8Set) bool {
 
 // Equals - Returns true if the current set and set b contain the same elements.
 func (set *Int8Set) Equals(b Int8Set) bool {
+	if (&b).IsEmpty() {
+		return false
+	}
 	return set.IsSubset(b) && (&b).IsSubset(*set)
 }
 
@@ -195,6 +227,11 @@ func (set *Int8Set) Has(elem Int8) bool {
 	return false
 }
 
+// IsEmpty - Return true if set is empty, else false
+func (set *Int8Set) IsEmpty() bool {
+	return len(*set) == 0
+}
+
 // Clear - Remove all element
 func (set *Int8Set) Clear() {
 	*set = Int8Set{}
@@ -206,7 +243,7 @@ func (set *Int8Set) Min() int8 {
 	minimum.Sort()
 
 	res := minimum[0]
-	return *res
+	return int8(res)
 }
 
 // Max - Return maximum element from set
@@ -215,7 +252,7 @@ func (set *Int8Set) Max() int8 {
 	maximum.Sort()
 
 	res := maximum[len(maximum)-1]
-	return *res
+	return int8(res)
 }
 
 // Sum - Return a sum of all elements
@@ -224,7 +261,7 @@ func (set *Int8Set) Sum() int {
 
 	if len(*set) > 0 {
 		for _, v := range *set {
-			total += int(*v)
+			total += int(v)
 		}
 	}
 
@@ -234,14 +271,14 @@ func (set *Int8Set) Sum() int {
 // Sort - Sort element in ascending mode
 func (set *Int8Set) Sort() {
 	sort.Slice(*set, func(i, j int) bool {
-		return *(*set)[i] < *(*set)[j]
+		return (*set)[i] < (*set)[j]
 	})
 }
 
 // ReverseSort - Sort element in descending mode
 func (set *Int8Set) ReverseSort() {
 	sort.Slice(*set, func(i, j int) bool {
-		return *(*set)[i] > *(*set)[j]
+		return (*set)[i] > (*set)[j]
 	})
 }
 
@@ -253,7 +290,7 @@ func (set *Int8Set) ToSlice() ([]int8, error) {
 
 	result := make([]int8, len(*set))
 	for i, v := range *set {
-		result[i] = *v
+		result[i] = int8(v)
 	}
 	return result, nil
 }

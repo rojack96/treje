@@ -102,8 +102,8 @@ func (set *Int8Set) Pop(index ...int) (int8, error) {
 	return *elem, nil
 }
 
-func (set *Int8Set) Union(elems Int8Set) Int8Set {
-	*set = append(*set, elems...)
+func (set *Int8Set) Union(b Int8Set) Int8Set {
+	*set = append(*set, b...)
 	return *set
 }
 

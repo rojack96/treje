@@ -41,15 +41,9 @@ func NewInt8Set(elems ...int8) (Int8Set, error) {
 	return set, nil
 }
 
-// Has - Return true if element is in set, otherwise false
-func (set *Int8Set) Has(elem Int8) bool {
-	for _, n := range *set {
-		if n == elem {
-			return true
-		}
-	}
-	return false
-}
+/*
+	Manipulation set methods
+*/
 
 // Add - Append a new element to the set if and only if it is not already present
 func (set *Int8Set) Add(elem Int8) error {
@@ -102,6 +96,10 @@ func (set *Int8Set) Pop(index ...int) (int8, error) {
 	return *elem, nil
 }
 
+/*
+	Set operation methods
+*/
+
 func (set *Int8Set) Union(b Int8Set) Int8Set {
 	*set = append(*set, b...)
 	return *set
@@ -151,6 +149,50 @@ func (set *Int8Set) Difference(b Int8Set) Int8Set {
 	}
 
 	return result
+}
+
+// SymmetricDifference - Returns a new set with elements that are present in either of the two sets but not in both.
+func (set *Int8Set) SymmetricDifference(b Int8Set) Int8Set {
+	diff1 := set.Difference(b)
+	diff2 := (&b).Difference(*set)
+
+	return append(diff1, diff2...)
+}
+
+// IsSubset - Returns true if the current set is a subset of the given set b.
+func (set *Int8Set) IsSubset(b Int8Set) bool {
+	for _, elem := range *set {
+		found := false
+		for _, other := range b {
+			if elem == other {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+	return true
+}
+
+// Equals - Returns true if the current set and set b contain the same elements.
+func (set *Int8Set) Equals(b Int8Set) bool {
+	return set.IsSubset(b) && (&b).IsSubset(*set)
+}
+
+/*
+	Utility methods
+*/
+
+// Has - Return true if element is in set, otherwise false
+func (set *Int8Set) Has(elem Int8) bool {
+	for _, n := range *set {
+		if n == elem {
+			return true
+		}
+	}
+	return false
 }
 
 // Clear - Remove all element
@@ -204,14 +246,14 @@ func (set *Int8Set) ReverseSort() {
 }
 
 // ToSlice - Returns a slice of native datatype from the set
-func (set *Int8Set) ToSlice() []int8 {
+func (set *Int8Set) ToSlice() ([]int8, error) {
 	if len(*set) == 0 {
-		panic(EmptySet)
+		return nil, errors.New(EmptySet)
 	}
 
 	result := make([]int8, len(*set))
 	for i, v := range *set {
 		result[i] = *v
 	}
-	return result
+	return result, nil
 }

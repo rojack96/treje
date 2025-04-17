@@ -175,11 +175,16 @@ func (set *Int8Set) Difference(b Int8Set) (Int8Set, error) {
 
 // SymmetricDifference - Returns a new set with elements that are present in either of the two sets but not in both.
 func (set *Int8Set) SymmetricDifference(b Int8Set) (Int8Set, error) {
-	if (&b).IsEmpty() {
-		return nil, errors.New("cannot difference an empty slice")
+	var (
+		diff1, diff2 Int8Set
+		err          error
+	)
+	if diff1, err = set.Difference(b); err != nil {
+		return nil, err
 	}
-	diff1, _ := set.Difference(b)
-	diff2, _ := (&b).Difference(*set)
+	if diff2, err = (&b).Difference(*set); err != nil {
+		return nil, err
+	}
 
 	return append(diff1, diff2...), nil
 }
@@ -207,9 +212,6 @@ func (set *Int8Set) IsSubset(b Int8Set) bool {
 
 // Equals - Returns true if the current set and set b contain the same elements.
 func (set *Int8Set) Equals(b Int8Set) bool {
-	if (&b).IsEmpty() {
-		return false
-	}
 	return set.IsSubset(b) && (&b).IsSubset(*set)
 }
 
@@ -239,6 +241,10 @@ func (set *Int8Set) Clear() {
 
 // Min - Return minimum element from set
 func (set *Int8Set) Min() int8 {
+	if set.IsEmpty() {
+		return 0
+	}
+
 	minimum := *set
 	minimum.Sort()
 
@@ -248,6 +254,10 @@ func (set *Int8Set) Min() int8 {
 
 // Max - Return maximum element from set
 func (set *Int8Set) Max() int8 {
+	if set.IsEmpty() {
+		return 0
+	}
+
 	maximum := *set
 	maximum.Sort()
 
@@ -282,9 +292,22 @@ func (set *Int8Set) ReverseSort() {
 	})
 }
 
+/*
+	Methods to manipulate set object
+*/
+
+func (set *Int8Set) Copy() (Int8Set, error) {
+	if set.IsEmpty() {
+		return nil, errors.New("cannot copy an empty slice")
+	}
+	elemsCopy := make(Int8Set, len(*set), cap(*set))
+	copy(elemsCopy, *set)
+	return elemsCopy, nil
+}
+
 // ToSlice - Returns a slice of native datatype from the set
 func (set *Int8Set) ToSlice() ([]int8, error) {
-	if len(*set) == 0 {
+	if set.IsEmpty() {
 		return nil, errors.New(EmptySet)
 	}
 

@@ -15,6 +15,8 @@ func main() {
 	} else {
 		fmt.Println("A", A)
 	}
+	A.Sort()
+	fmt.Println("has in A empty", A)
 
 	B, err := set.NewInt8Set([]int8{5, 4, 2, 9}...)
 	if err != nil {

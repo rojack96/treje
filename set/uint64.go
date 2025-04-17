@@ -10,7 +10,7 @@ type Uint64 uint64
 type Uint64Set []Uint64
 
 // NewUint64Set - Create a new empty set or from a slice
-func NewUint64Set(elems ...uint32) (Uint64Set, error) {
+func NewUint64Set(elems ...uint64) (Uint64Set, error) {
 	set := Uint64Set{}
 
 	if len(elems) == 0 {
@@ -21,7 +21,7 @@ func NewUint64Set(elems ...uint32) (Uint64Set, error) {
 		return append(set, Uint64(elems[0])), nil
 	}
 
-	elemsCopy := make([]uint32, len(elems))
+	elemsCopy := make([]uint64, len(elems))
 	copy(elemsCopy, elems)
 
 	sort.Slice(elems, func(i, j int) bool {
@@ -81,7 +81,7 @@ func (set *Uint64Set) Discard(elem Uint64) {
 }
 
 // Pop - Remove and return element from set at a given index (or last if none provided)
-func (set *Uint64Set) Pop(index ...int) (uint32, error) {
+func (set *Uint64Set) Pop(index ...int) (uint64, error) {
 	if set.IsEmpty() {
 		return 0, errors.New(EmptySet)
 	}
@@ -96,7 +96,7 @@ func (set *Uint64Set) Pop(index ...int) (uint32, error) {
 
 	elem := (*set)[i]
 	*set = append((*set)[:i], (*set)[i+1:]...)
-	return uint32(elem), nil
+	return uint64(elem), nil
 }
 
 /*
@@ -107,7 +107,7 @@ func (set *Uint64Set) Pop(index ...int) (uint32, error) {
 // if there are any duplicates in the union.
 func (set *Uint64Set) Union(b Uint64Set) (Uint64Set, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot union an empty slice")
+		return nil, errors.New(UnionEmpty)
 	}
 
 	for _, elemB := range b {
@@ -122,7 +122,7 @@ func (set *Uint64Set) Union(b Uint64Set) (Uint64Set, error) {
 // Intersect - Returns the elements that are present in both input sets.
 func (set *Uint64Set) Intersect(b Uint64Set) (Uint64Set, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot intersect an empty slice")
+		return nil, errors.New(IntersectEmpty)
 	}
 	set.Sort()
 	b.Sort()
@@ -153,7 +153,7 @@ func (set *Uint64Set) Difference(b Uint64Set) (Uint64Set, error) {
 	var result Uint64Set
 
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot difference an empty slice")
+		return nil, errors.New(DifferenceEmpty)
 	}
 
 	for _, elemA := range *set {
@@ -235,7 +235,7 @@ func (set *Uint64Set) Clear() {
 }
 
 // Min - Return minimum element from set
-func (set *Uint64Set) Min() uint32 {
+func (set *Uint64Set) Min() uint64 {
 	if set.IsEmpty() {
 		return 0
 	}
@@ -244,11 +244,11 @@ func (set *Uint64Set) Min() uint32 {
 	minimum.Sort()
 
 	res := minimum[0]
-	return uint32(res)
+	return uint64(res)
 }
 
 // Max - Return maximum element from set
-func (set *Uint64Set) Max() uint32 {
+func (set *Uint64Set) Max() uint64 {
 	if set.IsEmpty() {
 		return 0
 	}
@@ -257,7 +257,7 @@ func (set *Uint64Set) Max() uint32 {
 	maximum.Sort()
 
 	res := maximum[len(maximum)-1]
-	return uint32(res)
+	return uint64(res)
 }
 
 // Sum - Return a sum of all elements
@@ -293,7 +293,7 @@ func (set *Uint64Set) ReverseSort() {
 
 func (set *Uint64Set) Copy() (Uint64Set, error) {
 	if set.IsEmpty() {
-		return nil, errors.New("cannot copy an empty slice")
+		return nil, errors.New(CopyEmpty)
 	}
 	elemsCopy := make(Uint64Set, len(*set), cap(*set))
 	copy(elemsCopy, *set)
@@ -301,14 +301,14 @@ func (set *Uint64Set) Copy() (Uint64Set, error) {
 }
 
 // ToSlice - Returns a slice of native datatype from the set
-func (set *Uint64Set) ToSlice() ([]uint32, error) {
+func (set *Uint64Set) ToSlice() ([]uint64, error) {
 	if set.IsEmpty() {
 		return nil, errors.New(EmptySet)
 	}
 
-	result := make([]uint32, len(*set))
+	result := make([]uint64, len(*set))
 	for i, v := range *set {
-		result[i] = uint32(v)
+		result[i] = uint64(v)
 	}
 	return result, nil
 }

@@ -107,7 +107,7 @@ func (set *StringSet) Pop(index ...int) (string, error) {
 // if there are any duplicates in the union.
 func (set *StringSet) Union(b StringSet) (StringSet, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot union an empty slice")
+		return nil, errors.New(UnionEmpty)
 	}
 
 	for _, elemB := range b {
@@ -122,7 +122,7 @@ func (set *StringSet) Union(b StringSet) (StringSet, error) {
 // Intersect - Returns the elements that are present in both input sets.
 func (set *StringSet) Intersect(b StringSet) (StringSet, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot intersect an empty slice")
+		return nil, errors.New(IntersectEmpty)
 	}
 	set.Sort()
 	b.Sort()
@@ -153,7 +153,7 @@ func (set *StringSet) Difference(b StringSet) (StringSet, error) {
 	var result StringSet
 
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot difference an empty slice")
+		return nil, errors.New(DifferenceEmpty)
 	}
 
 	for _, elemA := range *set {
@@ -290,7 +290,7 @@ func (set *StringSet) ReverseSort() {
 
 func (set *StringSet) Copy() (StringSet, error) {
 	if set.IsEmpty() {
-		return nil, errors.New("cannot copy an empty slice")
+		return nil, errors.New(CopyEmpty)
 	}
 	elemsCopy := make(StringSet, len(*set), cap(*set))
 	copy(elemsCopy, *set)

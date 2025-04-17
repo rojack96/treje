@@ -107,7 +107,7 @@ func (set *Uint16Set) Pop(index ...int) (uint16, error) {
 // if there are any duplicates in the union.
 func (set *Uint16Set) Union(b Uint16Set) (Uint16Set, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot union an empty slice")
+		return nil, errors.New(UnionEmpty)
 	}
 
 	for _, elemB := range b {
@@ -122,7 +122,7 @@ func (set *Uint16Set) Union(b Uint16Set) (Uint16Set, error) {
 // Intersect - Returns the elements that are present in both input sets.
 func (set *Uint16Set) Intersect(b Uint16Set) (Uint16Set, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot intersect an empty slice")
+		return nil, errors.New(IntersectEmpty)
 	}
 	set.Sort()
 	b.Sort()
@@ -153,7 +153,7 @@ func (set *Uint16Set) Difference(b Uint16Set) (Uint16Set, error) {
 	var result Uint16Set
 
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot difference an empty slice")
+		return nil, errors.New(DifferenceEmpty)
 	}
 
 	for _, elemA := range *set {
@@ -293,7 +293,7 @@ func (set *Uint16Set) ReverseSort() {
 
 func (set *Uint16Set) Copy() (Uint16Set, error) {
 	if set.IsEmpty() {
-		return nil, errors.New("cannot copy an empty slice")
+		return nil, errors.New(CopyEmpty)
 	}
 	elemsCopy := make(Uint16Set, len(*set), cap(*set))
 	copy(elemsCopy, *set)

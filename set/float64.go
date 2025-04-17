@@ -107,7 +107,7 @@ func (set *Float64Set) Pop(index ...int) (float64, error) {
 // if there are any duplicates in the union.
 func (set *Float64Set) Union(b Float64Set) (Float64Set, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot union an empty slice")
+		return nil, errors.New(UnionEmpty)
 	}
 
 	for _, elemB := range b {
@@ -122,7 +122,7 @@ func (set *Float64Set) Union(b Float64Set) (Float64Set, error) {
 // Intersect - Returns the elements that are present in both input sets.
 func (set *Float64Set) Intersect(b Float64Set) (Float64Set, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot intersect an empty slice")
+		return nil, errors.New(IntersectEmpty)
 	}
 	set.Sort()
 	b.Sort()
@@ -153,7 +153,7 @@ func (set *Float64Set) Difference(b Float64Set) (Float64Set, error) {
 	var result Float64Set
 
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot difference an empty slice")
+		return nil, errors.New(DifferenceEmpty)
 	}
 
 	for _, elemA := range *set {
@@ -293,7 +293,7 @@ func (set *Float64Set) ReverseSort() {
 
 func (set *Float64Set) Copy() (Float64Set, error) {
 	if set.IsEmpty() {
-		return nil, errors.New("cannot copy an empty slice")
+		return nil, errors.New(CopyEmpty)
 	}
 	elemsCopy := make(Float64Set, len(*set), cap(*set))
 	copy(elemsCopy, *set)

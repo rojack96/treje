@@ -107,7 +107,7 @@ func (set *IntSet) Pop(index ...int) (int, error) {
 // if there are any duplicates in the union.
 func (set *IntSet) Union(b IntSet) (IntSet, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot union an empty slice")
+		return nil, errors.New(UnionEmpty)
 	}
 
 	for _, elemB := range b {
@@ -293,7 +293,7 @@ func (set *IntSet) ReverseSort() {
 
 func (set *IntSet) Copy() (IntSet, error) {
 	if set.IsEmpty() {
-		return nil, errors.New("cannot copy an empty slice")
+		return nil, errors.New(CopyEmpty)
 	}
 	elemsCopy := make(IntSet, len(*set), cap(*set))
 	copy(elemsCopy, *set)

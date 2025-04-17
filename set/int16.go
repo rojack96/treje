@@ -107,7 +107,7 @@ func (set *Int16Set) Pop(index ...int) (int16, error) {
 // if there are any duplicates in the union.
 func (set *Int16Set) Union(b Int16Set) (Int16Set, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New("cannot union an empty slice")
+		return nil, errors.New(UnionEmpty)
 	}
 
 	for _, elemB := range b {

@@ -1,4 +1,4 @@
-package mapSet
+package mapset
 
 import "github.com/rojack96/treje/mapset/types"
 

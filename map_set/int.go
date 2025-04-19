@@ -6,12 +6,11 @@ import (
 	"sort"
 )
 
-type void struct{}
-type Int8Set map[int8]void
+type IntSet map[int]void
 
-// NewInt8Set - Create a new empty set or from a slice
-func NewInt8Set(elems ...int8) (Int8Set, error) {
-	set := Int8Set{}
+// NewIntSet - Create a new empty set or from a slice
+func NewIntSet(elems ...int) (IntSet, error) {
+	set := IntSet{}
 
 	if len(elems) == 0 {
 		return set, nil
@@ -28,12 +27,12 @@ func NewInt8Set(elems ...int8) (Int8Set, error) {
 */
 
 // Add - Append a new element to the set if and only if it is not already present
-func (set *Int8Set) Add(elem int8) {
+func (set *IntSet) Add(elem int) {
 	(*set)[elem] = void{}
 }
 
 // Remove - Remove a specific element from a set, if the element not exists raise an error
-func (set *Int8Set) Remove(elem int8) error {
+func (set *IntSet) Remove(elem int) error {
 	if set.IsEmpty() {
 		return errors.New(utils.EmptySet)
 	}
@@ -46,7 +45,7 @@ func (set *Int8Set) Remove(elem int8) error {
 }
 
 // Discard - Remove a specific element from set
-func (set *Int8Set) Discard(elem int8) {
+func (set *IntSet) Discard(elem int) {
 	delete(*set, elem)
 }
 
@@ -56,7 +55,7 @@ func (set *Int8Set) Discard(elem int8) {
 
 // Union - Merges the current set with another set, but returns an error
 // if there are any duplicates in the union.
-func (set *Int8Set) Union(b Int8Set) (Int8Set, error) {
+func (set *IntSet) Union(b IntSet) (IntSet, error) {
 
 	for elemB := range b {
 		if set.Has(elemB) {
@@ -68,8 +67,8 @@ func (set *Int8Set) Union(b Int8Set) (Int8Set, error) {
 }
 
 // Intersect - Returns the elements that are present in both input sets.
-func (set *Int8Set) Intersect(b Int8Set) Int8Set {
-	var result Int8Set
+func (set *IntSet) Intersect(b IntSet) IntSet {
+	var result IntSet
 
 	for k := range *set {
 		if _, ok := b[k]; ok {
@@ -82,8 +81,8 @@ func (set *Int8Set) Intersect(b Int8Set) Int8Set {
 
 // Difference - Returns the elements that are present in the first set
 // but not in the second set.
-func (set *Int8Set) Difference(b Int8Set) Int8Set {
-	var result Int8Set
+func (set *IntSet) Difference(b IntSet) IntSet {
+	var result IntSet
 
 	for k := range *set {
 		if _, ok := b[k]; !ok {
@@ -95,9 +94,9 @@ func (set *Int8Set) Difference(b Int8Set) Int8Set {
 }
 
 // SymmetricDifference - Returns a new set with elements that are present in either of the two sets but not in both.
-func (set *Int8Set) SymmetricDifference(b Int8Set) Int8Set {
+func (set *IntSet) SymmetricDifference(b IntSet) IntSet {
 	var (
-		diff1, diff2 Int8Set
+		diff1, diff2 IntSet
 	)
 	diff1 = set.Difference(b)
 	diff2 = (&b).Difference(*set)
@@ -110,7 +109,7 @@ func (set *Int8Set) SymmetricDifference(b Int8Set) Int8Set {
 }
 
 // IsSubsetOf - Returns true if the current set is a subset of the given set b.
-func (set *Int8Set) IsSubsetOf(b Int8Set) bool {
+func (set *IntSet) IsSubsetOf(b IntSet) bool {
 	for key := range *set {
 		if _, found := b[key]; !found {
 			return false
@@ -120,7 +119,7 @@ func (set *Int8Set) IsSubsetOf(b Int8Set) bool {
 }
 
 // Equals - Returns true if the current set and set b contain the same elements.
-func (set *Int8Set) Equals(b Int8Set) bool {
+func (set *IntSet) Equals(b IntSet) bool {
 	return set.IsSubsetOf(b) && (&b).IsSubsetOf(*set)
 }
 
@@ -129,29 +128,29 @@ func (set *Int8Set) Equals(b Int8Set) bool {
 */
 
 // Has - Return true if the element is in set, otherwise false
-func (set *Int8Set) Has(elem int8) bool {
+func (set *IntSet) Has(elem int) bool {
 	_, ok := (*set)[elem]
 	return ok
 }
 
 // IsEmpty - Return true if the set is empty, else false
-func (set *Int8Set) IsEmpty() bool {
+func (set *IntSet) IsEmpty() bool {
 	return len(*set) == 0
 }
 
 // Clear - Remove all elements
-func (set *Int8Set) Clear() {
-	*set = Int8Set{}
+func (set *IntSet) Clear() {
+	*set = IntSet{}
 }
 
 // Min - Return minimum element from the set
-func (set *Int8Set) Min() (int8, error) {
+func (set *IntSet) Min() (int, error) {
 	if set.IsEmpty() {
 		return 0, errors.New(utils.EmptySet)
 	}
 
 	var (
-		slice []int8
+		slice []int
 		err   error
 	)
 
@@ -167,13 +166,13 @@ func (set *Int8Set) Min() (int8, error) {
 }
 
 // Max - Return maximum element from the set
-func (set *Int8Set) Max() (int8, error) {
+func (set *IntSet) Max() (int, error) {
 	if set.IsEmpty() {
 		return 0, errors.New(utils.EmptySet)
 	}
 
 	var (
-		slice []int8
+		slice []int
 		err   error
 	)
 
@@ -190,9 +189,9 @@ func (set *Int8Set) Max() (int8, error) {
 }
 
 // Sum - Return a sum of all elements
-func (set *Int8Set) Sum() int {
+func (set *IntSet) Sum() int {
 	var (
-		keys []int8
+		keys []int
 		err  error
 	)
 
@@ -204,7 +203,7 @@ func (set *Int8Set) Sum() int {
 
 	if len(keys) > 0 {
 		for _, v := range keys {
-			total += int(v)
+			total += v
 		}
 	}
 
@@ -212,10 +211,10 @@ func (set *Int8Set) Sum() int {
 }
 
 // Sort - Sort element in ascending mode
-func (set *Int8Set) Sort() error {
+func (set *IntSet) Sort() error {
 	var (
-		originalMap Int8Set
-		keys        []int8
+		originalMap IntSet
+		keys        []int
 		err         error
 	)
 	if originalMap, err = set.Copy(); err != nil {
@@ -238,10 +237,10 @@ func (set *Int8Set) Sort() error {
 }
 
 // ReverseSort - Sort element in descending mode
-func (set *Int8Set) ReverseSort() error {
+func (set *IntSet) ReverseSort() error {
 	var (
-		originalMap Int8Set
-		keys        []int8
+		originalMap IntSet
+		keys        []int
 		err         error
 	)
 	if originalMap, err = set.Copy(); err != nil {
@@ -267,12 +266,12 @@ func (set *Int8Set) ReverseSort() error {
 	Methods to manipulate a set object
 */
 
-func (set *Int8Set) Copy() (Int8Set, error) {
+func (set *IntSet) Copy() (IntSet, error) {
 	if set.IsEmpty() {
 		return nil, errors.New(utils.CopyEmpty)
 	}
 
-	elemsCopy := make(Int8Set, len(*set))
+	elemsCopy := make(IntSet, len(*set))
 
 	for key := range *set {
 		elemsCopy[key] = void{}
@@ -282,12 +281,12 @@ func (set *Int8Set) Copy() (Int8Set, error) {
 }
 
 // ToSlice - Returns a slice of native datatype from the map set
-func (set *Int8Set) ToSlice() ([]int8, error) {
+func (set *IntSet) ToSlice() ([]int, error) {
 	if set.IsEmpty() {
 		return nil, errors.New(utils.EmptySet)
 	}
 
-	result := make([]int8, len(*set))
+	result := make([]int, len(*set))
 	for k := range *set {
 		result = append(result, k)
 	}

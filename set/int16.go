@@ -7,8 +7,10 @@ import (
 	"strconv"
 )
 
-type Int16 int16
-type Int16Set []Int16
+type (
+	Int16    int16
+	Int16Set []Int16
+)
 
 // NewInt16Set - Create a new empty set or from a slice
 func NewInt16Set(elems ...int16) (Int16Set, error) {

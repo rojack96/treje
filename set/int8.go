@@ -7,8 +7,10 @@ import (
 	"strconv"
 )
 
-type Int8 int8
-type Int8Set []Int8
+type (
+	Int8    int8
+	Int8Set []Int8
+)
 
 // NewInt8Set - Create a new empty set or from a slice
 func NewInt8Set(elems ...int8) (Int8Set, error) {

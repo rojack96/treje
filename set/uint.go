@@ -7,8 +7,10 @@ import (
 	"strconv"
 )
 
-type Uint uint
-type UintSet []Uint
+type (
+	Uint    uint
+	UintSet []Uint
+)
 
 // NewUintSet - Create a new empty set or from a slice
 func NewUintSet(elems ...uint) (UintSet, error) {

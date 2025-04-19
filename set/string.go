@@ -7,8 +7,10 @@ import (
 	"strings"
 )
 
-type String string
-type StringSet []String
+type (
+	String    string
+	StringSet []String
+)
 
 // NewStringSet - Create a new empty set or from a slice
 func NewStringSet(elems ...string) (StringSet, error) {

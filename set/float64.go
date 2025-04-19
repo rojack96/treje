@@ -7,8 +7,10 @@ import (
 	"strconv"
 )
 
-type Float64 float64
-type Float64Set []Float64
+type (
+	Float64    float64
+	Float64Set []Float64
+)
 
 // NewFloat64Set - Create a new empty set or from a slice
 func NewFloat64Set(elems ...float64) (Float64Set, error) {

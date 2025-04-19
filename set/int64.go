@@ -7,8 +7,10 @@ import (
 	"strconv"
 )
 
-type Int64 int64
-type Int64Set []Int64
+type (
+	Int64    int64
+	Int64Set []Int64
+)
 
 // NewInt64Set - Create a new empty set or from a slice
 func NewInt64Set(elems ...int64) (Int64Set, error) {

@@ -7,8 +7,10 @@ import (
 	"strconv"
 )
 
-type Uint64 uint64
-type Uint64Set []Uint64
+type (
+	Uint64    uint64
+	Uint64Set []Uint64
+)
 
 // NewUint64Set - Create a new empty set or from a slice
 func NewUint64Set(elems ...uint64) (Uint64Set, error) {

@@ -7,8 +7,10 @@ import (
 	"strconv"
 )
 
-type Uint32 uint32
-type Uint32Set []Uint32
+type (
+	Uint32    uint32
+	Uint32Set []Uint32
+)
 
 // NewUint32Set - Create a new empty set or from a slice
 func NewUint32Set(elems ...uint32) (Uint32Set, error) {

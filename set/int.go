@@ -7,8 +7,10 @@ import (
 	"strconv"
 )
 
-type Int int
-type IntSet []Int
+type (
+	Int    int
+	IntSet []Int
+)
 
 // NewIntSet - Create a new empty set or from a slice
 func NewIntSet(elems ...int) (IntSet, error) {

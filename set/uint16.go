@@ -7,8 +7,10 @@ import (
 	"strconv"
 )
 
-type Uint16 uint16
-type Uint16Set []Uint16
+type (
+	Uint16    uint16
+	Uint16Set []Uint16
+)
 
 // NewUint16Set - Create a new empty set or from a slice
 func NewUint16Set(elems ...uint16) (Uint16Set, error) {

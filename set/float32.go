@@ -7,8 +7,10 @@ import (
 	"strconv"
 )
 
-type Float32 float32
-type Float32Set []Float32
+type (
+	Float32    float32
+	Float32Set []Float32
+)
 
 // NewFloat32Set - Create a new empty set or from a slice
 func NewFloat32Set(elems ...float32) (Float32Set, error) {

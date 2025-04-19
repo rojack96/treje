@@ -2,7 +2,7 @@ package set
 
 import (
 	"errors"
-	"github.com/rojack96/treje/utils"
+	"github.com/rojack96/treje/common"
 	"sort"
 	"strings"
 )
@@ -33,7 +33,7 @@ func NewStringSet(elems ...string) (StringSet, error) {
 
 	for i := 1; i < len(elems); i++ {
 		if elems[i] == elems[i-1] {
-			return nil, errors.New(utils.HasDuplicates)
+			return nil, errors.New(common.HasDuplicates)
 		}
 	}
 
@@ -51,7 +51,7 @@ func NewStringSet(elems ...string) (StringSet, error) {
 // Add - Append a new element to the set if and only if it is not already present
 func (set *StringSet) Add(elem String) error {
 	if set.Has(elem) {
-		return errors.New(string(elem) + " " + utils.AlreadyExists)
+		return errors.New(string(elem) + " " + common.AlreadyExists)
 	}
 
 	*set = append(*set, elem)
@@ -61,13 +61,13 @@ func (set *StringSet) Add(elem String) error {
 // Remove - Remove a specific element from a set, if the element not exists raise an error
 func (set *StringSet) Remove(elem String) error {
 	if set.IsEmpty() {
-		return errors.New(utils.EmptySet)
+		return errors.New(common.EmptySet)
 	}
 
 	originalLen := len(*set)
 	set.Discard(elem)
 	if len(*set) == originalLen {
-		return errors.New(utils.ElemNotExist)
+		return errors.New(common.ElemNotExist)
 	}
 	return nil
 }
@@ -86,14 +86,14 @@ func (set *StringSet) Discard(elem String) {
 // Pop - Remove and return element from a set at a given index (or last if none provided)
 func (set *StringSet) Pop(index ...int) (string, error) {
 	if set.IsEmpty() {
-		return "", errors.New(utils.EmptySet)
+		return "", errors.New(common.EmptySet)
 	}
 
 	i := len(*set) - 1
 	if len(index) > 0 {
 		i = index[0]
 		if i < 0 || i >= len(*set) {
-			return "", errors.New(utils.IndexOutOfRange)
+			return "", errors.New(common.IndexOutOfRange)
 		}
 	}
 
@@ -112,7 +112,7 @@ func (set *StringSet) Union(b StringSet) (StringSet, error) {
 
 	for _, elemB := range b {
 		if set.Has(elemB) {
-			return *set, errors.New(utils.HasDuplicates)
+			return *set, errors.New(common.HasDuplicates)
 		}
 		*set = append(*set, elemB)
 	}
@@ -283,7 +283,7 @@ func (set *StringSet) ReverseSort() {
 
 func (set *StringSet) Copy() (StringSet, error) {
 	if set.IsEmpty() {
-		return nil, errors.New(utils.CopyEmpty)
+		return nil, errors.New(common.CopyEmpty)
 	}
 	elemsCopy := make(StringSet, len(*set), cap(*set))
 	copy(elemsCopy, *set)
@@ -293,7 +293,7 @@ func (set *StringSet) Copy() (StringSet, error) {
 // ToSlice - Returns a slice of native datatype from the set
 func (set *StringSet) ToSlice() ([]string, error) {
 	if set.IsEmpty() {
-		return nil, errors.New(utils.EmptySet)
+		return nil, errors.New(common.EmptySet)
 	}
 
 	result := make([]string, len(*set))

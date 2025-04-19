@@ -1,4 +1,4 @@
-package utils
+package common
 
 const (
 	AlreadyExists   = "already exists in the set"

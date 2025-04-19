@@ -2,11 +2,11 @@ package mapSet
 
 import (
 	"errors"
-	"github.com/rojack96/treje/utils"
+	"github.com/rojack96/treje/common"
+	s "github.com/rojack96/treje/set"
 	"sort"
 )
 
-type void struct{}
 type Int8Set map[int8]void
 
 // NewInt8Set - Create a new empty set or from a slice
@@ -35,11 +35,11 @@ func (set *Int8Set) Add(elem int8) {
 // Remove - Remove a specific element from a set, if the element not exists raise an error
 func (set *Int8Set) Remove(elem int8) error {
 	if set.IsEmpty() {
-		return errors.New(utils.EmptySet)
+		return errors.New(common.EmptySet)
 	}
 
 	if !set.Has(elem) {
-		return errors.New(utils.ElemNotExist)
+		return errors.New(common.ElemNotExist)
 	}
 	set.Discard(elem)
 	return nil
@@ -60,7 +60,7 @@ func (set *Int8Set) Union(b Int8Set) (Int8Set, error) {
 
 	for elemB := range b {
 		if set.Has(elemB) {
-			return *set, errors.New(utils.HasDuplicates)
+			return nil, errors.New(common.HasDuplicates)
 		}
 		set.Add(elemB)
 	}
@@ -147,7 +147,7 @@ func (set *Int8Set) Clear() {
 // Min - Return minimum element from the set
 func (set *Int8Set) Min() (int8, error) {
 	if set.IsEmpty() {
-		return 0, errors.New(utils.EmptySet)
+		return 0, errors.New(common.EmptySet)
 	}
 
 	var (
@@ -169,7 +169,7 @@ func (set *Int8Set) Min() (int8, error) {
 // Max - Return maximum element from the set
 func (set *Int8Set) Max() (int8, error) {
 	if set.IsEmpty() {
-		return 0, errors.New(utils.EmptySet)
+		return 0, errors.New(common.EmptySet)
 	}
 
 	var (
@@ -269,7 +269,7 @@ func (set *Int8Set) ReverseSort() error {
 
 func (set *Int8Set) Copy() (Int8Set, error) {
 	if set.IsEmpty() {
-		return nil, errors.New(utils.CopyEmpty)
+		return nil, errors.New(common.CopyEmpty)
 	}
 
 	elemsCopy := make(Int8Set, len(*set))
@@ -284,12 +284,28 @@ func (set *Int8Set) Copy() (Int8Set, error) {
 // ToSlice - Returns a slice of native datatype from the map set
 func (set *Int8Set) ToSlice() ([]int8, error) {
 	if set.IsEmpty() {
-		return nil, errors.New(utils.EmptySet)
+		return nil, errors.New(common.EmptySet)
 	}
 
 	result := make([]int8, len(*set))
 	for k := range *set {
 		result = append(result, k)
 	}
+	return result, nil
+}
+
+// ToSet - Returns a Set entities
+func (set *Int8Set) ToSet() (s.Int8Set, error) {
+	var (
+		slice  []int8
+		result s.Int8Set
+		err    error
+	)
+
+	if slice, err = set.ToSlice(); err != nil {
+		return nil, err
+	}
+
+	result, _ = s.NewInt8Set(slice...)
 	return result, nil
 }

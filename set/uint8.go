@@ -2,6 +2,7 @@ package set
 
 import (
 	"errors"
+	"github.com/rojack96/treje/utils"
 	"sort"
 	"strconv"
 )
@@ -30,7 +31,7 @@ func NewUint8Set(elems ...uint8) (Uint8Set, error) {
 
 	for i := 1; i < len(elems); i++ {
 		if elems[i] == elems[i-1] {
-			return nil, errors.New(HasDuplicates)
+			return nil, errors.New(utils.HasDuplicates)
 		}
 	}
 
@@ -48,7 +49,7 @@ func NewUint8Set(elems ...uint8) (Uint8Set, error) {
 // Add - Append a new element to the set if and only if it is not already present
 func (set *Uint8Set) Add(elem Uint8) error {
 	if set.Has(elem) {
-		return errors.New(strconv.Itoa(int(elem)) + " " + AlreadyExists)
+		return errors.New(strconv.Itoa(int(elem)) + " " + utils.AlreadyExists)
 	}
 
 	*set = append(*set, elem)
@@ -58,13 +59,13 @@ func (set *Uint8Set) Add(elem Uint8) error {
 // Remove - Remove a specific element from a set, if the element not exists raise an error
 func (set *Uint8Set) Remove(elem Uint8) error {
 	if set.IsEmpty() {
-		return errors.New(EmptySet)
+		return errors.New(utils.EmptySet)
 	}
 
 	originalLen := len(*set)
 	set.Discard(elem)
 	if len(*set) == originalLen {
-		return errors.New(ElemNotExist)
+		return errors.New(utils.ElemNotExist)
 	}
 	return nil
 }
@@ -83,14 +84,14 @@ func (set *Uint8Set) Discard(elem Uint8) {
 // Pop - Remove and return element from a set at a given index (or last if none provided)
 func (set *Uint8Set) Pop(index ...int) (uint8, error) {
 	if set.IsEmpty() {
-		return 0, errors.New(EmptySet)
+		return 0, errors.New(utils.EmptySet)
 	}
 
 	i := len(*set) - 1
 	if len(index) > 0 {
 		i = index[0]
 		if i < 0 || i >= len(*set) {
-			return 0, errors.New(IndexOutOfRange)
+			return 0, errors.New(utils.IndexOutOfRange)
 		}
 	}
 
@@ -107,12 +108,12 @@ func (set *Uint8Set) Pop(index ...int) (uint8, error) {
 // if there are any duplicates in the union.
 func (set *Uint8Set) Union(b Uint8Set) (Uint8Set, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New(UnionEmpty)
+		return nil, errors.New(utils.UnionEmpty)
 	}
 
 	for _, elemB := range b {
 		if set.Has(elemB) {
-			return *set, errors.New(HasDuplicates)
+			return *set, errors.New(utils.HasDuplicates)
 		}
 		*set = append(*set, elemB)
 	}
@@ -122,7 +123,7 @@ func (set *Uint8Set) Union(b Uint8Set) (Uint8Set, error) {
 // Intersect - Returns the elements that are present in both input sets.
 func (set *Uint8Set) Intersect(b Uint8Set) (Uint8Set, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New(IntersectEmpty)
+		return nil, errors.New(utils.IntersectEmpty)
 	}
 	set.Sort()
 	b.Sort()
@@ -153,7 +154,7 @@ func (set *Uint8Set) Difference(b Uint8Set) (Uint8Set, error) {
 	var result Uint8Set
 
 	if (&b).IsEmpty() {
-		return nil, errors.New(DifferenceEmpty)
+		return nil, errors.New(utils.DifferenceEmpty)
 	}
 
 	for _, elemA := range *set {
@@ -293,7 +294,7 @@ func (set *Uint8Set) ReverseSort() {
 
 func (set *Uint8Set) Copy() (Uint8Set, error) {
 	if set.IsEmpty() {
-		return nil, errors.New(CopyEmpty)
+		return nil, errors.New(utils.CopyEmpty)
 	}
 	elemsCopy := make(Uint8Set, len(*set), cap(*set))
 	copy(elemsCopy, *set)
@@ -303,7 +304,7 @@ func (set *Uint8Set) Copy() (Uint8Set, error) {
 // ToSlice - Returns a slice of native datatype from the set
 func (set *Uint8Set) ToSlice() ([]uint8, error) {
 	if set.IsEmpty() {
-		return nil, errors.New(EmptySet)
+		return nil, errors.New(utils.EmptySet)
 	}
 
 	result := make([]uint8, len(*set))

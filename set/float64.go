@@ -2,6 +2,7 @@ package set
 
 import (
 	"errors"
+	"github.com/rojack96/treje/utils"
 	"sort"
 	"strconv"
 )
@@ -30,7 +31,7 @@ func NewFloat64Set(elems ...float64) (Float64Set, error) {
 
 	for i := 1; i < len(elems); i++ {
 		if elems[i] == elems[i-1] {
-			return nil, errors.New(HasDuplicates)
+			return nil, errors.New(utils.HasDuplicates)
 		}
 	}
 
@@ -48,7 +49,7 @@ func NewFloat64Set(elems ...float64) (Float64Set, error) {
 // Add - Append a new element to the set if and only if it is not already present
 func (set *Float64Set) Add(elem Float64) error {
 	if set.Has(elem) {
-		return errors.New(strconv.Itoa(int(elem)) + " " + AlreadyExists)
+		return errors.New(strconv.Itoa(int(elem)) + " " + utils.AlreadyExists)
 	}
 
 	*set = append(*set, elem)
@@ -58,13 +59,13 @@ func (set *Float64Set) Add(elem Float64) error {
 // Remove - Remove a specific element from a set, if the element not exists raise an error
 func (set *Float64Set) Remove(elem Float64) error {
 	if set.IsEmpty() {
-		return errors.New(EmptySet)
+		return errors.New(utils.EmptySet)
 	}
 
 	originalLen := len(*set)
 	set.Discard(elem)
 	if len(*set) == originalLen {
-		return errors.New(ElemNotExist)
+		return errors.New(utils.ElemNotExist)
 	}
 	return nil
 }
@@ -83,14 +84,14 @@ func (set *Float64Set) Discard(elem Float64) {
 // Pop - Remove and return element from a set at a given index (or last if none provided)
 func (set *Float64Set) Pop(index ...int) (float64, error) {
 	if set.IsEmpty() {
-		return 0, errors.New(EmptySet)
+		return 0, errors.New(utils.EmptySet)
 	}
 
 	i := len(*set) - 1
 	if len(index) > 0 {
 		i = index[0]
 		if i < 0 || i >= len(*set) {
-			return 0, errors.New(IndexOutOfRange)
+			return 0, errors.New(utils.IndexOutOfRange)
 		}
 	}
 
@@ -107,12 +108,12 @@ func (set *Float64Set) Pop(index ...int) (float64, error) {
 // if there are any duplicates in the union.
 func (set *Float64Set) Union(b Float64Set) (Float64Set, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New(UnionEmpty)
+		return nil, errors.New(utils.UnionEmpty)
 	}
 
 	for _, elemB := range b {
 		if set.Has(elemB) {
-			return *set, errors.New(HasDuplicates)
+			return *set, errors.New(utils.HasDuplicates)
 		}
 		*set = append(*set, elemB)
 	}
@@ -122,7 +123,7 @@ func (set *Float64Set) Union(b Float64Set) (Float64Set, error) {
 // Intersect - Returns the elements that are present in both input sets.
 func (set *Float64Set) Intersect(b Float64Set) (Float64Set, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New(IntersectEmpty)
+		return nil, errors.New(utils.IntersectEmpty)
 	}
 	set.Sort()
 	b.Sort()
@@ -153,7 +154,7 @@ func (set *Float64Set) Difference(b Float64Set) (Float64Set, error) {
 	var result Float64Set
 
 	if (&b).IsEmpty() {
-		return nil, errors.New(DifferenceEmpty)
+		return nil, errors.New(utils.DifferenceEmpty)
 	}
 
 	for _, elemA := range *set {
@@ -293,7 +294,7 @@ func (set *Float64Set) ReverseSort() {
 
 func (set *Float64Set) Copy() (Float64Set, error) {
 	if set.IsEmpty() {
-		return nil, errors.New(CopyEmpty)
+		return nil, errors.New(utils.CopyEmpty)
 	}
 	elemsCopy := make(Float64Set, len(*set), cap(*set))
 	copy(elemsCopy, *set)
@@ -303,7 +304,7 @@ func (set *Float64Set) Copy() (Float64Set, error) {
 // ToSlice - Returns a slice of native datatype from the set
 func (set *Float64Set) ToSlice() ([]float64, error) {
 	if set.IsEmpty() {
-		return nil, errors.New(EmptySet)
+		return nil, errors.New(utils.EmptySet)
 	}
 
 	result := make([]float64, len(*set))

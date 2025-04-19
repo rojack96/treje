@@ -1,4 +1,4 @@
-package set
+package utils
 
 const (
 	AlreadyExists   = "already exists in the set"

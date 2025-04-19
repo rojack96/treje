@@ -2,6 +2,7 @@ package set
 
 import (
 	"errors"
+	"github.com/rojack96/treje/utils"
 	"sort"
 	"strconv"
 )
@@ -30,7 +31,7 @@ func NewIntSet(elems ...int) (IntSet, error) {
 
 	for i := 1; i < len(elems); i++ {
 		if elems[i] == elems[i-1] {
-			return nil, errors.New(HasDuplicates)
+			return nil, errors.New(utils.HasDuplicates)
 		}
 	}
 
@@ -48,7 +49,7 @@ func NewIntSet(elems ...int) (IntSet, error) {
 // Add - Append a new element to the set if and only if it is not already present
 func (set *IntSet) Add(elem Int) error {
 	if set.Has(elem) {
-		return errors.New(strconv.Itoa(int(elem)) + " " + AlreadyExists)
+		return errors.New(strconv.Itoa(int(elem)) + " " + utils.AlreadyExists)
 	}
 
 	*set = append(*set, elem)
@@ -58,13 +59,13 @@ func (set *IntSet) Add(elem Int) error {
 // Remove - Remove a specific element from a set, if the element not exists raise an error
 func (set *IntSet) Remove(elem Int) error {
 	if set.IsEmpty() {
-		return errors.New(EmptySet)
+		return errors.New(utils.EmptySet)
 	}
 
 	originalLen := len(*set)
 	set.Discard(elem)
 	if len(*set) == originalLen {
-		return errors.New(ElemNotExist)
+		return errors.New(utils.ElemNotExist)
 	}
 	return nil
 }
@@ -83,14 +84,14 @@ func (set *IntSet) Discard(elem Int) {
 // Pop - Remove and return element from a set at a given index (or last if none provided)
 func (set *IntSet) Pop(index ...int) (int, error) {
 	if set.IsEmpty() {
-		return 0, errors.New(EmptySet)
+		return 0, errors.New(utils.EmptySet)
 	}
 
 	i := len(*set) - 1
 	if len(index) > 0 {
 		i = index[0]
 		if i < 0 || i >= len(*set) {
-			return 0, errors.New(IndexOutOfRange)
+			return 0, errors.New(utils.IndexOutOfRange)
 		}
 	}
 
@@ -107,12 +108,12 @@ func (set *IntSet) Pop(index ...int) (int, error) {
 // if there are any duplicates in the union.
 func (set *IntSet) Union(b IntSet) (IntSet, error) {
 	if (&b).IsEmpty() {
-		return nil, errors.New(UnionEmpty)
+		return nil, errors.New(utils.UnionEmpty)
 	}
 
 	for _, elemB := range b {
 		if set.Has(elemB) {
-			return *set, errors.New(HasDuplicates)
+			return *set, errors.New(utils.HasDuplicates)
 		}
 		*set = append(*set, elemB)
 	}
@@ -293,7 +294,7 @@ func (set *IntSet) ReverseSort() {
 
 func (set *IntSet) Copy() (IntSet, error) {
 	if set.IsEmpty() {
-		return nil, errors.New(CopyEmpty)
+		return nil, errors.New(utils.CopyEmpty)
 	}
 	elemsCopy := make(IntSet, len(*set), cap(*set))
 	copy(elemsCopy, *set)
@@ -303,7 +304,7 @@ func (set *IntSet) Copy() (IntSet, error) {
 // ToSlice - Returns a slice of native datatype from the set
 func (set *IntSet) ToSlice() ([]int, error) {
 	if set.IsEmpty() {
-		return nil, errors.New(EmptySet)
+		return nil, errors.New(utils.EmptySet)
 	}
 
 	result := make([]int, len(*set))

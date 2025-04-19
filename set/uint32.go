@@ -107,9 +107,6 @@ func (set *Uint32Set) Pop(index ...int) (uint32, error) {
 // Union - Merges the current set with another set, but returns an error
 // if there are any duplicates in the union.
 func (set *Uint32Set) Union(b Uint32Set) (Uint32Set, error) {
-	if (&b).IsEmpty() {
-		return nil, errors.New(utils.UnionEmpty)
-	}
 
 	for _, elemB := range b {
 		if set.Has(elemB) {
@@ -122,9 +119,6 @@ func (set *Uint32Set) Union(b Uint32Set) (Uint32Set, error) {
 
 // Intersect - Returns the elements that are present in both input sets.
 func (set *Uint32Set) Intersect(b Uint32Set) (Uint32Set, error) {
-	if (&b).IsEmpty() {
-		return nil, errors.New(utils.IntersectEmpty)
-	}
 	set.Sort()
 	b.Sort()
 
@@ -152,10 +146,6 @@ func (set *Uint32Set) Intersect(b Uint32Set) (Uint32Set, error) {
 // but not in the second set.
 func (set *Uint32Set) Difference(b Uint32Set) (Uint32Set, error) {
 	var result Uint32Set
-
-	if (&b).IsEmpty() {
-		return nil, errors.New(utils.DifferenceEmpty)
-	}
 
 	for _, elemA := range *set {
 		found := false

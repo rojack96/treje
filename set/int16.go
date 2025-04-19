@@ -107,9 +107,6 @@ func (set *Int16Set) Pop(index ...int) (int16, error) {
 // Union - Merges the current set with another set, but returns an error
 // if there are any duplicates in the union.
 func (set *Int16Set) Union(b Int16Set) (Int16Set, error) {
-	if (&b).IsEmpty() {
-		return nil, errors.New(utils.UnionEmpty)
-	}
 
 	for _, elemB := range b {
 		if set.Has(elemB) {
@@ -122,9 +119,6 @@ func (set *Int16Set) Union(b Int16Set) (Int16Set, error) {
 
 // Intersect - Returns the elements that are present in both input sets.
 func (set *Int16Set) Intersect(b Int16Set) (Int16Set, error) {
-	if (&b).IsEmpty() {
-		return nil, errors.New("cannot intersect an empty slice")
-	}
 	set.Sort()
 	b.Sort()
 
@@ -152,10 +146,6 @@ func (set *Int16Set) Intersect(b Int16Set) (Int16Set, error) {
 // but not in the second set.
 func (set *Int16Set) Difference(b Int16Set) (Int16Set, error) {
 	var result Int16Set
-
-	if (&b).IsEmpty() {
-		return nil, errors.New("cannot difference an empty slice")
-	}
 
 	for _, elemA := range *set {
 		found := false

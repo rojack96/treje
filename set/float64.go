@@ -107,9 +107,6 @@ func (set *Float64Set) Pop(index ...int) (float64, error) {
 // Union - Merges the current set with another set, but returns an error
 // if there are any duplicates in the union.
 func (set *Float64Set) Union(b Float64Set) (Float64Set, error) {
-	if (&b).IsEmpty() {
-		return nil, errors.New(utils.UnionEmpty)
-	}
 
 	for _, elemB := range b {
 		if set.Has(elemB) {
@@ -122,9 +119,6 @@ func (set *Float64Set) Union(b Float64Set) (Float64Set, error) {
 
 // Intersect - Returns the elements that are present in both input sets.
 func (set *Float64Set) Intersect(b Float64Set) (Float64Set, error) {
-	if (&b).IsEmpty() {
-		return nil, errors.New(utils.IntersectEmpty)
-	}
 	set.Sort()
 	b.Sort()
 
@@ -152,10 +146,6 @@ func (set *Float64Set) Intersect(b Float64Set) (Float64Set, error) {
 // but not in the second set.
 func (set *Float64Set) Difference(b Float64Set) (Float64Set, error) {
 	var result Float64Set
-
-	if (&b).IsEmpty() {
-		return nil, errors.New(utils.DifferenceEmpty)
-	}
 
 	for _, elemA := range *set {
 		found := false

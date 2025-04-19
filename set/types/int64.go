@@ -1,4 +1,4 @@
-package set
+package types
 
 import (
 	"errors"
@@ -8,23 +8,23 @@ import (
 )
 
 type (
-	Int32    int32
-	Int32Set []Int32
+	Integer64 int64
+	Int64Set  []Integer64
 )
 
-// NewInt32Set - Create a new empty set or from a slice
-func NewInt32Set(elems ...int32) (Int32Set, error) {
-	set := Int32Set{}
+// Int64 - Create a new empty set or from a slice
+func (s Set) Int64(elems ...int64) (Int64Set, error) {
+	set := Int64Set{}
 
 	if len(elems) == 0 {
 		return set, nil
 	}
 
 	if len(elems) == 1 {
-		return append(set, Int32(elems[0])), nil
+		return append(set, Integer64(elems[0])), nil
 	}
 
-	elemsCopy := make([]int32, len(elems))
+	elemsCopy := make([]int64, len(elems))
 	copy(elemsCopy, elems)
 
 	sort.Slice(elems, func(i, j int) bool {
@@ -38,7 +38,7 @@ func NewInt32Set(elems ...int32) (Int32Set, error) {
 	}
 
 	for _, n := range elemsCopy {
-		set = append(set, Int32(n))
+		set = append(set, Integer64(n))
 	}
 
 	return set, nil
@@ -49,7 +49,7 @@ func NewInt32Set(elems ...int32) (Int32Set, error) {
 */
 
 // Add - Append a new element to the set if and only if it is not already present
-func (set *Int32Set) Add(elem Int32) error {
+func (set *Int64Set) Add(elem Integer64) error {
 	if set.Has(elem) {
 		return errors.New(strconv.Itoa(int(elem)) + " " + common.AlreadyExists)
 	}
@@ -59,7 +59,7 @@ func (set *Int32Set) Add(elem Int32) error {
 }
 
 // Remove - Remove a specific element from a set, if the element not exists raise an error
-func (set *Int32Set) Remove(elem Int32) error {
+func (set *Int64Set) Remove(elem Integer64) error {
 	if set.IsEmpty() {
 		return errors.New(common.EmptySet)
 	}
@@ -73,7 +73,7 @@ func (set *Int32Set) Remove(elem Int32) error {
 }
 
 // Discard - Remove a specific element from set
-func (set *Int32Set) Discard(elem Int32) {
+func (set *Int64Set) Discard(elem Integer64) {
 	result := *set
 	for i, n := range result {
 		if n == elem {
@@ -84,7 +84,7 @@ func (set *Int32Set) Discard(elem Int32) {
 }
 
 // Pop - Remove and return element from a set at a given index (or last if none provided)
-func (set *Int32Set) Pop(index ...int) (int32, error) {
+func (set *Int64Set) Pop(index ...int) (int64, error) {
 	if set.IsEmpty() {
 		return 0, errors.New(common.EmptySet)
 	}
@@ -99,7 +99,7 @@ func (set *Int32Set) Pop(index ...int) (int32, error) {
 
 	elem := (*set)[i]
 	*set = append((*set)[:i], (*set)[i+1:]...)
-	return int32(elem), nil
+	return int64(elem), nil
 }
 
 /*
@@ -108,7 +108,7 @@ func (set *Int32Set) Pop(index ...int) (int32, error) {
 
 // Union - Merges the current set with another set, but returns an error
 // if there are any duplicates in the union.
-func (set *Int32Set) Union(b Int32Set) (Int32Set, error) {
+func (set *Int64Set) Union(b Int64Set) (Int64Set, error) {
 
 	for _, elemB := range b {
 		if set.Has(elemB) {
@@ -120,11 +120,11 @@ func (set *Int32Set) Union(b Int32Set) (Int32Set, error) {
 }
 
 // Intersect - Returns the elements that are present in both input sets.
-func (set *Int32Set) Intersect(b Int32Set) (Int32Set, error) {
+func (set *Int64Set) Intersect(b Int64Set) (Int64Set, error) {
 	set.Sort()
 	b.Sort()
 
-	var result Int32Set
+	var result Int64Set
 	i, j := 0, 0
 
 	for i < len(*set) && j < len(b) {
@@ -146,8 +146,8 @@ func (set *Int32Set) Intersect(b Int32Set) (Int32Set, error) {
 
 // Difference - Returns the elements that are present in the first set
 // but not in the second set.
-func (set *Int32Set) Difference(b Int32Set) (Int32Set, error) {
-	var result Int32Set
+func (set *Int64Set) Difference(b Int64Set) (Int64Set, error) {
+	var result Int64Set
 
 	for _, elemA := range *set {
 		found := false
@@ -166,9 +166,9 @@ func (set *Int32Set) Difference(b Int32Set) (Int32Set, error) {
 }
 
 // SymmetricDifference - Returns a new set with elements that are present in either of the two sets but not in both.
-func (set *Int32Set) SymmetricDifference(b Int32Set) (Int32Set, error) {
+func (set *Int64Set) SymmetricDifference(b Int64Set) (Int64Set, error) {
 	var (
-		diff1, diff2 Int32Set
+		diff1, diff2 Int64Set
 		err          error
 	)
 	if diff1, err = set.Difference(b); err != nil {
@@ -182,7 +182,7 @@ func (set *Int32Set) SymmetricDifference(b Int32Set) (Int32Set, error) {
 }
 
 // IsSubsetOf - Returns true if the current set is a subset of the given set b.
-func (set *Int32Set) IsSubsetOf(b Int32Set) bool {
+func (set *Int64Set) IsSubsetOf(b Int64Set) bool {
 	for _, elem := range *set {
 		found := false
 		for _, other := range b {
@@ -199,7 +199,7 @@ func (set *Int32Set) IsSubsetOf(b Int32Set) bool {
 }
 
 // Equals - Returns true if the current set and set b contain the same elements.
-func (set *Int32Set) Equals(b Int32Set) bool {
+func (set *Int64Set) Equals(b Int64Set) bool {
 	return set.IsSubsetOf(b) && (&b).IsSubsetOf(*set)
 }
 
@@ -208,7 +208,7 @@ func (set *Int32Set) Equals(b Int32Set) bool {
 */
 
 // Has - Return true if the element is in set, otherwise false
-func (set *Int32Set) Has(elem Int32) bool {
+func (set *Int64Set) Has(elem Integer64) bool {
 	for _, n := range *set {
 		if n == elem {
 			return true
@@ -218,17 +218,17 @@ func (set *Int32Set) Has(elem Int32) bool {
 }
 
 // IsEmpty - Return true if the set is empty, else false
-func (set *Int32Set) IsEmpty() bool {
+func (set *Int64Set) IsEmpty() bool {
 	return len(*set) == 0
 }
 
 // Clear - Remove all elements
-func (set *Int32Set) Clear() {
-	*set = Int32Set{}
+func (set *Int64Set) Clear() {
+	*set = Int64Set{}
 }
 
 // Min - Return minimum element from the set
-func (set *Int32Set) Min() int32 {
+func (set *Int64Set) Min() int64 {
 	if set.IsEmpty() {
 		return 0
 	}
@@ -237,11 +237,11 @@ func (set *Int32Set) Min() int32 {
 	minimum.Sort()
 
 	res := minimum[0]
-	return int32(res)
+	return int64(res)
 }
 
 // Max - Return maximum element from the set
-func (set *Int32Set) Max() int32 {
+func (set *Int64Set) Max() int64 {
 	if set.IsEmpty() {
 		return 0
 	}
@@ -250,11 +250,11 @@ func (set *Int32Set) Max() int32 {
 	maximum.Sort()
 
 	res := maximum[len(maximum)-1]
-	return int32(res)
+	return int64(res)
 }
 
 // Sum - Return a sum of all elements
-func (set *Int32Set) Sum() int {
+func (set *Int64Set) Sum() int {
 	total := 0
 
 	if len(*set) > 0 {
@@ -267,14 +267,14 @@ func (set *Int32Set) Sum() int {
 }
 
 // Sort - Sort element in ascending mode
-func (set *Int32Set) Sort() {
+func (set *Int64Set) Sort() {
 	sort.Slice(*set, func(i, j int) bool {
 		return (*set)[i] < (*set)[j]
 	})
 }
 
 // ReverseSort - Sort element in descending mode
-func (set *Int32Set) ReverseSort() {
+func (set *Int64Set) ReverseSort() {
 	sort.Slice(*set, func(i, j int) bool {
 		return (*set)[i] > (*set)[j]
 	})
@@ -284,24 +284,24 @@ func (set *Int32Set) ReverseSort() {
 	Methods to manipulate a set object
 */
 
-func (set *Int32Set) Copy() (Int32Set, error) {
+func (set *Int64Set) Copy() (Int64Set, error) {
 	if set.IsEmpty() {
 		return nil, errors.New(common.CopyEmpty)
 	}
-	elemsCopy := make(Int32Set, len(*set), cap(*set))
+	elemsCopy := make(Int64Set, len(*set), cap(*set))
 	copy(elemsCopy, *set)
 	return elemsCopy, nil
 }
 
 // ToSlice - Returns a slice of native datatype from the set
-func (set *Int32Set) ToSlice() ([]int32, error) {
+func (set *Int64Set) ToSlice() ([]int64, error) {
 	if set.IsEmpty() {
 		return nil, errors.New(common.EmptySet)
 	}
 
-	result := make([]int32, len(*set))
+	result := make([]int64, len(*set))
 	for i, v := range *set {
-		result[i] = int32(v)
+		result[i] = int64(v)
 	}
 	return result, nil
 }

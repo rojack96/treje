@@ -1,30 +1,30 @@
-package set
+package types
 
 import (
 	"errors"
 	"github.com/rojack96/treje/common"
 	"sort"
-	"strings"
+	"strconv"
 )
 
 type (
-	String    string
-	StringSet []String
+	Integer16 int16
+	Int16Set  []Integer16
 )
 
-// NewStringSet - Create a new empty set or from a slice
-func NewStringSet(elems ...string) (StringSet, error) {
-	set := StringSet{}
+// Int16 - Create a new empty set or from a slice
+func (s Set) Int16(elems ...int16) (Int16Set, error) {
+	set := Int16Set{}
 
 	if len(elems) == 0 {
 		return set, nil
 	}
 
 	if len(elems) == 1 {
-		return append(set, String(elems[0])), nil
+		return append(set, Integer16(elems[0])), nil
 	}
 
-	elemsCopy := make([]string, len(elems))
+	elemsCopy := make([]int16, len(elems))
 	copy(elemsCopy, elems)
 
 	sort.Slice(elems, func(i, j int) bool {
@@ -38,7 +38,7 @@ func NewStringSet(elems ...string) (StringSet, error) {
 	}
 
 	for _, n := range elemsCopy {
-		set = append(set, String(n))
+		set = append(set, Integer16(n))
 	}
 
 	return set, nil
@@ -49,9 +49,9 @@ func NewStringSet(elems ...string) (StringSet, error) {
 */
 
 // Add - Append a new element to the set if and only if it is not already present
-func (set *StringSet) Add(elem String) error {
+func (set *Int16Set) Add(elem Integer16) error {
 	if set.Has(elem) {
-		return errors.New(string(elem) + " " + common.AlreadyExists)
+		return errors.New(strconv.Itoa(int(elem)) + " " + common.AlreadyExists)
 	}
 
 	*set = append(*set, elem)
@@ -59,7 +59,7 @@ func (set *StringSet) Add(elem String) error {
 }
 
 // Remove - Remove a specific element from a set, if the element not exists raise an error
-func (set *StringSet) Remove(elem String) error {
+func (set *Int16Set) Remove(elem Integer16) error {
 	if set.IsEmpty() {
 		return errors.New(common.EmptySet)
 	}
@@ -73,7 +73,7 @@ func (set *StringSet) Remove(elem String) error {
 }
 
 // Discard - Remove a specific element from set
-func (set *StringSet) Discard(elem String) {
+func (set *Int16Set) Discard(elem Integer16) {
 	result := *set
 	for i, n := range result {
 		if n == elem {
@@ -84,22 +84,22 @@ func (set *StringSet) Discard(elem String) {
 }
 
 // Pop - Remove and return element from a set at a given index (or last if none provided)
-func (set *StringSet) Pop(index ...int) (string, error) {
+func (set *Int16Set) Pop(index ...int) (int16, error) {
 	if set.IsEmpty() {
-		return "", errors.New(common.EmptySet)
+		return 0, errors.New(common.EmptySet)
 	}
 
 	i := len(*set) - 1
 	if len(index) > 0 {
 		i = index[0]
 		if i < 0 || i >= len(*set) {
-			return "", errors.New(common.IndexOutOfRange)
+			return 0, errors.New(common.IndexOutOfRange)
 		}
 	}
 
 	elem := (*set)[i]
 	*set = append((*set)[:i], (*set)[i+1:]...)
-	return string(elem), nil
+	return int16(elem), nil
 }
 
 /*
@@ -108,7 +108,7 @@ func (set *StringSet) Pop(index ...int) (string, error) {
 
 // Union - Merges the current set with another set, but returns an error
 // if there are any duplicates in the union.
-func (set *StringSet) Union(b StringSet) (StringSet, error) {
+func (set *Int16Set) Union(b Int16Set) (Int16Set, error) {
 
 	for _, elemB := range b {
 		if set.Has(elemB) {
@@ -120,11 +120,11 @@ func (set *StringSet) Union(b StringSet) (StringSet, error) {
 }
 
 // Intersect - Returns the elements that are present in both input sets.
-func (set *StringSet) Intersect(b StringSet) (StringSet, error) {
+func (set *Int16Set) Intersect(b Int16Set) (Int16Set, error) {
 	set.Sort()
 	b.Sort()
 
-	var result StringSet
+	var result Int16Set
 	i, j := 0, 0
 
 	for i < len(*set) && j < len(b) {
@@ -146,8 +146,8 @@ func (set *StringSet) Intersect(b StringSet) (StringSet, error) {
 
 // Difference - Returns the elements that are present in the first set
 // but not in the second set.
-func (set *StringSet) Difference(b StringSet) (StringSet, error) {
-	var result StringSet
+func (set *Int16Set) Difference(b Int16Set) (Int16Set, error) {
+	var result Int16Set
 
 	for _, elemA := range *set {
 		found := false
@@ -166,9 +166,9 @@ func (set *StringSet) Difference(b StringSet) (StringSet, error) {
 }
 
 // SymmetricDifference - Returns a new set with elements that are present in either of the two sets but not in both.
-func (set *StringSet) SymmetricDifference(b StringSet) (StringSet, error) {
+func (set *Int16Set) SymmetricDifference(b Int16Set) (Int16Set, error) {
 	var (
-		diff1, diff2 StringSet
+		diff1, diff2 Int16Set
 		err          error
 	)
 	if diff1, err = set.Difference(b); err != nil {
@@ -182,7 +182,7 @@ func (set *StringSet) SymmetricDifference(b StringSet) (StringSet, error) {
 }
 
 // IsSubsetOf - Returns true if the current set is a subset of the given set b.
-func (set *StringSet) IsSubsetOf(b StringSet) bool {
+func (set *Int16Set) IsSubsetOf(b Int16Set) bool {
 	for _, elem := range *set {
 		found := false
 		for _, other := range b {
@@ -199,7 +199,7 @@ func (set *StringSet) IsSubsetOf(b StringSet) bool {
 }
 
 // Equals - Returns true if the current set and set b contain the same elements.
-func (set *StringSet) Equals(b StringSet) bool {
+func (set *Int16Set) Equals(b Int16Set) bool {
 	return set.IsSubsetOf(b) && (&b).IsSubsetOf(*set)
 }
 
@@ -208,7 +208,7 @@ func (set *StringSet) Equals(b StringSet) bool {
 */
 
 // Has - Return true if the element is in set, otherwise false
-func (set *StringSet) Has(elem String) bool {
+func (set *Int16Set) Has(elem Integer16) bool {
 	for _, n := range *set {
 		if n == elem {
 			return true
@@ -218,60 +218,63 @@ func (set *StringSet) Has(elem String) bool {
 }
 
 // IsEmpty - Return true if the set is empty, else false
-func (set *StringSet) IsEmpty() bool {
+func (set *Int16Set) IsEmpty() bool {
 	return len(*set) == 0
 }
 
 // Clear - Remove all elements
-func (set *StringSet) Clear() {
-	*set = StringSet{}
+func (set *Int16Set) Clear() {
+	*set = Int16Set{}
 }
 
 // Min - Return minimum element from the set
-func (set *StringSet) Min() string {
+func (set *Int16Set) Min() int16 {
 	if set.IsEmpty() {
-		return ""
+		return 0
 	}
 
 	minimum := *set
 	minimum.Sort()
 
 	res := minimum[0]
-	return string(res)
+	return int16(res)
 }
 
 // Max - Return maximum element from the set
-func (set *StringSet) Max() string {
+func (set *Int16Set) Max() int16 {
 	if set.IsEmpty() {
-		return ""
+		return 0
 	}
 
 	maximum := *set
 	maximum.Sort()
 
 	res := maximum[len(maximum)-1]
-	return string(res)
+	return int16(res)
 }
 
-// Concat - Return a string concat of all elements with a separator
-func (set *StringSet) Concat(separator string) string {
-	result, err := set.ToSlice()
-	if err != nil {
-		return ""
+// Sum - Return a sum of all elements
+func (set *Int16Set) Sum() int {
+	total := 0
+
+	if len(*set) > 0 {
+		for _, v := range *set {
+			total += int(v)
+		}
 	}
 
-	return strings.Join(result, separator)
+	return total
 }
 
 // Sort - Sort element in ascending mode
-func (set *StringSet) Sort() {
+func (set *Int16Set) Sort() {
 	sort.Slice(*set, func(i, j int) bool {
 		return (*set)[i] < (*set)[j]
 	})
 }
 
 // ReverseSort - Sort element in descending mode
-func (set *StringSet) ReverseSort() {
+func (set *Int16Set) ReverseSort() {
 	sort.Slice(*set, func(i, j int) bool {
 		return (*set)[i] > (*set)[j]
 	})
@@ -281,24 +284,24 @@ func (set *StringSet) ReverseSort() {
 	Methods to manipulate a set object
 */
 
-func (set *StringSet) Copy() (StringSet, error) {
+func (set *Int16Set) Copy() (Int16Set, error) {
 	if set.IsEmpty() {
-		return nil, errors.New(common.CopyEmpty)
+		return nil, errors.New("cannot copy an empty slice")
 	}
-	elemsCopy := make(StringSet, len(*set), cap(*set))
+	elemsCopy := make(Int16Set, len(*set), cap(*set))
 	copy(elemsCopy, *set)
 	return elemsCopy, nil
 }
 
 // ToSlice - Returns a slice of native datatype from the set
-func (set *StringSet) ToSlice() ([]string, error) {
+func (set *Int16Set) ToSlice() ([]int16, error) {
 	if set.IsEmpty() {
 		return nil, errors.New(common.EmptySet)
 	}
 
-	result := make([]string, len(*set))
+	result := make([]int16, len(*set))
 	for i, v := range *set {
-		result[i] = string(v)
+		result[i] = int16(v)
 	}
 	return result, nil
 }

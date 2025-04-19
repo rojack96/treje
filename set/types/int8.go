@@ -1,4 +1,4 @@
-package set
+package types
 
 import (
 	"errors"
@@ -8,23 +8,23 @@ import (
 )
 
 type (
-	Int64    int64
-	Int64Set []Int64
+	Integer8 int8
+	Int8Set  []Integer8
 )
 
-// NewInt64Set - Create a new empty set or from a slice
-func NewInt64Set(elems ...int64) (Int64Set, error) {
-	set := Int64Set{}
+// Int8 - Create a new empty set or from a slice
+func (s Set) Int8(elems ...int8) (Int8Set, error) {
+	set := Int8Set{}
 
 	if len(elems) == 0 {
 		return set, nil
 	}
 
 	if len(elems) == 1 {
-		return append(set, Int64(elems[0])), nil
+		return append(set, Integer8(elems[0])), nil
 	}
 
-	elemsCopy := make([]int64, len(elems))
+	elemsCopy := make([]int8, len(elems))
 	copy(elemsCopy, elems)
 
 	sort.Slice(elems, func(i, j int) bool {
@@ -38,7 +38,7 @@ func NewInt64Set(elems ...int64) (Int64Set, error) {
 	}
 
 	for _, n := range elemsCopy {
-		set = append(set, Int64(n))
+		set = append(set, Integer8(n))
 	}
 
 	return set, nil
@@ -49,7 +49,7 @@ func NewInt64Set(elems ...int64) (Int64Set, error) {
 */
 
 // Add - Append a new element to the set if and only if it is not already present
-func (set *Int64Set) Add(elem Int64) error {
+func (set *Int8Set) Add(elem Integer8) error {
 	if set.Has(elem) {
 		return errors.New(strconv.Itoa(int(elem)) + " " + common.AlreadyExists)
 	}
@@ -59,7 +59,7 @@ func (set *Int64Set) Add(elem Int64) error {
 }
 
 // Remove - Remove a specific element from a set, if the element not exists raise an error
-func (set *Int64Set) Remove(elem Int64) error {
+func (set *Int8Set) Remove(elem Integer8) error {
 	if set.IsEmpty() {
 		return errors.New(common.EmptySet)
 	}
@@ -73,7 +73,7 @@ func (set *Int64Set) Remove(elem Int64) error {
 }
 
 // Discard - Remove a specific element from set
-func (set *Int64Set) Discard(elem Int64) {
+func (set *Int8Set) Discard(elem Integer8) {
 	result := *set
 	for i, n := range result {
 		if n == elem {
@@ -84,7 +84,7 @@ func (set *Int64Set) Discard(elem Int64) {
 }
 
 // Pop - Remove and return element from a set at a given index (or last if none provided)
-func (set *Int64Set) Pop(index ...int) (int64, error) {
+func (set *Int8Set) Pop(index ...int) (int8, error) {
 	if set.IsEmpty() {
 		return 0, errors.New(common.EmptySet)
 	}
@@ -99,7 +99,7 @@ func (set *Int64Set) Pop(index ...int) (int64, error) {
 
 	elem := (*set)[i]
 	*set = append((*set)[:i], (*set)[i+1:]...)
-	return int64(elem), nil
+	return int8(elem), nil
 }
 
 /*
@@ -108,7 +108,7 @@ func (set *Int64Set) Pop(index ...int) (int64, error) {
 
 // Union - Merges the current set with another set, but returns an error
 // if there are any duplicates in the union.
-func (set *Int64Set) Union(b Int64Set) (Int64Set, error) {
+func (set *Int8Set) Union(b Int8Set) (Int8Set, error) {
 
 	for _, elemB := range b {
 		if set.Has(elemB) {
@@ -120,11 +120,11 @@ func (set *Int64Set) Union(b Int64Set) (Int64Set, error) {
 }
 
 // Intersect - Returns the elements that are present in both input sets.
-func (set *Int64Set) Intersect(b Int64Set) (Int64Set, error) {
+func (set *Int8Set) Intersect(b Int8Set) (Int8Set, error) {
 	set.Sort()
 	b.Sort()
 
-	var result Int64Set
+	var result Int8Set
 	i, j := 0, 0
 
 	for i < len(*set) && j < len(b) {
@@ -146,8 +146,8 @@ func (set *Int64Set) Intersect(b Int64Set) (Int64Set, error) {
 
 // Difference - Returns the elements that are present in the first set
 // but not in the second set.
-func (set *Int64Set) Difference(b Int64Set) (Int64Set, error) {
-	var result Int64Set
+func (set *Int8Set) Difference(b Int8Set) (Int8Set, error) {
+	var result Int8Set
 
 	for _, elemA := range *set {
 		found := false
@@ -166,9 +166,9 @@ func (set *Int64Set) Difference(b Int64Set) (Int64Set, error) {
 }
 
 // SymmetricDifference - Returns a new set with elements that are present in either of the two sets but not in both.
-func (set *Int64Set) SymmetricDifference(b Int64Set) (Int64Set, error) {
+func (set *Int8Set) SymmetricDifference(b Int8Set) (Int8Set, error) {
 	var (
-		diff1, diff2 Int64Set
+		diff1, diff2 Int8Set
 		err          error
 	)
 	if diff1, err = set.Difference(b); err != nil {
@@ -182,7 +182,7 @@ func (set *Int64Set) SymmetricDifference(b Int64Set) (Int64Set, error) {
 }
 
 // IsSubsetOf - Returns true if the current set is a subset of the given set b.
-func (set *Int64Set) IsSubsetOf(b Int64Set) bool {
+func (set *Int8Set) IsSubsetOf(b Int8Set) bool {
 	for _, elem := range *set {
 		found := false
 		for _, other := range b {
@@ -199,7 +199,7 @@ func (set *Int64Set) IsSubsetOf(b Int64Set) bool {
 }
 
 // Equals - Returns true if the current set and set b contain the same elements.
-func (set *Int64Set) Equals(b Int64Set) bool {
+func (set *Int8Set) Equals(b Int8Set) bool {
 	return set.IsSubsetOf(b) && (&b).IsSubsetOf(*set)
 }
 
@@ -208,7 +208,7 @@ func (set *Int64Set) Equals(b Int64Set) bool {
 */
 
 // Has - Return true if the element is in set, otherwise false
-func (set *Int64Set) Has(elem Int64) bool {
+func (set *Int8Set) Has(elem Integer8) bool {
 	for _, n := range *set {
 		if n == elem {
 			return true
@@ -218,17 +218,17 @@ func (set *Int64Set) Has(elem Int64) bool {
 }
 
 // IsEmpty - Return true if the set is empty, else false
-func (set *Int64Set) IsEmpty() bool {
+func (set *Int8Set) IsEmpty() bool {
 	return len(*set) == 0
 }
 
 // Clear - Remove all elements
-func (set *Int64Set) Clear() {
-	*set = Int64Set{}
+func (set *Int8Set) Clear() {
+	*set = Int8Set{}
 }
 
 // Min - Return minimum element from the set
-func (set *Int64Set) Min() int64 {
+func (set *Int8Set) Min() int8 {
 	if set.IsEmpty() {
 		return 0
 	}
@@ -237,11 +237,11 @@ func (set *Int64Set) Min() int64 {
 	minimum.Sort()
 
 	res := minimum[0]
-	return int64(res)
+	return int8(res)
 }
 
 // Max - Return maximum element from the set
-func (set *Int64Set) Max() int64 {
+func (set *Int8Set) Max() int8 {
 	if set.IsEmpty() {
 		return 0
 	}
@@ -250,11 +250,11 @@ func (set *Int64Set) Max() int64 {
 	maximum.Sort()
 
 	res := maximum[len(maximum)-1]
-	return int64(res)
+	return int8(res)
 }
 
 // Sum - Return a sum of all elements
-func (set *Int64Set) Sum() int {
+func (set *Int8Set) Sum() int {
 	total := 0
 
 	if len(*set) > 0 {
@@ -267,14 +267,14 @@ func (set *Int64Set) Sum() int {
 }
 
 // Sort - Sort element in ascending mode
-func (set *Int64Set) Sort() {
+func (set *Int8Set) Sort() {
 	sort.Slice(*set, func(i, j int) bool {
 		return (*set)[i] < (*set)[j]
 	})
 }
 
 // ReverseSort - Sort element in descending mode
-func (set *Int64Set) ReverseSort() {
+func (set *Int8Set) ReverseSort() {
 	sort.Slice(*set, func(i, j int) bool {
 		return (*set)[i] > (*set)[j]
 	})
@@ -284,24 +284,24 @@ func (set *Int64Set) ReverseSort() {
 	Methods to manipulate a set object
 */
 
-func (set *Int64Set) Copy() (Int64Set, error) {
+func (set *Int8Set) Copy() (Int8Set, error) {
 	if set.IsEmpty() {
 		return nil, errors.New(common.CopyEmpty)
 	}
-	elemsCopy := make(Int64Set, len(*set), cap(*set))
+	elemsCopy := make(Int8Set, len(*set), cap(*set))
 	copy(elemsCopy, *set)
 	return elemsCopy, nil
 }
 
 // ToSlice - Returns a slice of native datatype from the set
-func (set *Int64Set) ToSlice() ([]int64, error) {
+func (set *Int8Set) ToSlice() ([]int8, error) {
 	if set.IsEmpty() {
 		return nil, errors.New(common.EmptySet)
 	}
 
-	result := make([]int64, len(*set))
+	result := make([]int8, len(*set))
 	for i, v := range *set {
-		result[i] = int64(v)
+		result[i] = int8(v)
 	}
 	return result, nil
 }

@@ -1,17 +1,18 @@
-package mapSet
+package types
 
 import (
 	"errors"
 	"github.com/rojack96/treje/common"
 	s "github.com/rojack96/treje/set"
+	stype "github.com/rojack96/treje/set/types"
 	"sort"
 )
 
-type IntSet map[int]void
+type Uint16Set map[uint16]void
 
-// NewIntSet - Create a new empty set or from a slice
-func NewIntSet(elems ...int) (IntSet, error) {
-	set := IntSet{}
+// Uint16 - Create a new empty set or from a slice
+func (m MapSet) Uint16(elems ...uint16) (Uint16Set, error) {
+	set := Uint16Set{}
 
 	if len(elems) == 0 {
 		return set, nil
@@ -28,12 +29,12 @@ func NewIntSet(elems ...int) (IntSet, error) {
 */
 
 // Add - Append a new element to the set if and only if it is not already present
-func (set *IntSet) Add(elem int) {
+func (set *Uint16Set) Add(elem uint16) {
 	(*set)[elem] = void{}
 }
 
 // Remove - Remove a specific element from a set, if the element not exists raise an error
-func (set *IntSet) Remove(elem int) error {
+func (set *Uint16Set) Remove(elem uint16) error {
 	if set.IsEmpty() {
 		return errors.New(common.EmptySet)
 	}
@@ -46,7 +47,7 @@ func (set *IntSet) Remove(elem int) error {
 }
 
 // Discard - Remove a specific element from set
-func (set *IntSet) Discard(elem int) {
+func (set *Uint16Set) Discard(elem uint16) {
 	delete(*set, elem)
 }
 
@@ -56,7 +57,7 @@ func (set *IntSet) Discard(elem int) {
 
 // Union - Merges the current set with another set, but returns an error
 // if there are any duplicates in the union.
-func (set *IntSet) Union(b IntSet) (IntSet, error) {
+func (set *Uint16Set) Union(b Uint16Set) (Uint16Set, error) {
 
 	for elemB := range b {
 		if set.Has(elemB) {
@@ -68,8 +69,8 @@ func (set *IntSet) Union(b IntSet) (IntSet, error) {
 }
 
 // Intersect - Returns the elements that are present in both input sets.
-func (set *IntSet) Intersect(b IntSet) IntSet {
-	var result IntSet
+func (set *Uint16Set) Intersect(b Uint16Set) Uint16Set {
+	var result Uint16Set
 
 	for k := range *set {
 		if _, ok := b[k]; ok {
@@ -82,8 +83,8 @@ func (set *IntSet) Intersect(b IntSet) IntSet {
 
 // Difference - Returns the elements that are present in the first set
 // but not in the second set.
-func (set *IntSet) Difference(b IntSet) IntSet {
-	var result IntSet
+func (set *Uint16Set) Difference(b Uint16Set) Uint16Set {
+	var result Uint16Set
 
 	for k := range *set {
 		if _, ok := b[k]; !ok {
@@ -95,9 +96,9 @@ func (set *IntSet) Difference(b IntSet) IntSet {
 }
 
 // SymmetricDifference - Returns a new set with elements that are present in either of the two sets but not in both.
-func (set *IntSet) SymmetricDifference(b IntSet) IntSet {
+func (set *Uint16Set) SymmetricDifference(b Uint16Set) Uint16Set {
 	var (
-		diff1, diff2 IntSet
+		diff1, diff2 Uint16Set
 	)
 	diff1 = set.Difference(b)
 	diff2 = (&b).Difference(*set)
@@ -110,7 +111,7 @@ func (set *IntSet) SymmetricDifference(b IntSet) IntSet {
 }
 
 // IsSubsetOf - Returns true if the current set is a subset of the given set b.
-func (set *IntSet) IsSubsetOf(b IntSet) bool {
+func (set *Uint16Set) IsSubsetOf(b Uint16Set) bool {
 	for key := range *set {
 		if _, found := b[key]; !found {
 			return false
@@ -120,7 +121,7 @@ func (set *IntSet) IsSubsetOf(b IntSet) bool {
 }
 
 // Equals - Returns true if the current set and set b contain the same elements.
-func (set *IntSet) Equals(b IntSet) bool {
+func (set *Uint16Set) Equals(b Uint16Set) bool {
 	return set.IsSubsetOf(b) && (&b).IsSubsetOf(*set)
 }
 
@@ -129,29 +130,29 @@ func (set *IntSet) Equals(b IntSet) bool {
 */
 
 // Has - Return true if the element is in set, otherwise false
-func (set *IntSet) Has(elem int) bool {
+func (set *Uint16Set) Has(elem uint16) bool {
 	_, ok := (*set)[elem]
 	return ok
 }
 
 // IsEmpty - Return true if the set is empty, else false
-func (set *IntSet) IsEmpty() bool {
+func (set *Uint16Set) IsEmpty() bool {
 	return len(*set) == 0
 }
 
 // Clear - Remove all elements
-func (set *IntSet) Clear() {
-	*set = IntSet{}
+func (set *Uint16Set) Clear() {
+	*set = Uint16Set{}
 }
 
 // Min - Return minimum element from the set
-func (set *IntSet) Min() (int, error) {
+func (set *Uint16Set) Min() (uint16, error) {
 	if set.IsEmpty() {
 		return 0, errors.New(common.EmptySet)
 	}
 
 	var (
-		slice []int
+		slice []uint16
 		err   error
 	)
 
@@ -167,13 +168,13 @@ func (set *IntSet) Min() (int, error) {
 }
 
 // Max - Return maximum element from the set
-func (set *IntSet) Max() (int, error) {
+func (set *Uint16Set) Max() (uint16, error) {
 	if set.IsEmpty() {
 		return 0, errors.New(common.EmptySet)
 	}
 
 	var (
-		slice []int
+		slice []uint16
 		err   error
 	)
 
@@ -190,9 +191,9 @@ func (set *IntSet) Max() (int, error) {
 }
 
 // Sum - Return a sum of all elements
-func (set *IntSet) Sum() int {
+func (set *Uint16Set) Sum() int {
 	var (
-		keys []int
+		keys []uint16
 		err  error
 	)
 
@@ -204,7 +205,7 @@ func (set *IntSet) Sum() int {
 
 	if len(keys) > 0 {
 		for _, v := range keys {
-			total += v
+			total += int(v)
 		}
 	}
 
@@ -212,10 +213,10 @@ func (set *IntSet) Sum() int {
 }
 
 // Sort - Sort element in ascending mode
-func (set *IntSet) Sort() error {
+func (set *Uint16Set) Sort() error {
 	var (
-		originalMap IntSet
-		keys        []int
+		originalMap Uint16Set
+		keys        []uint16
 		err         error
 	)
 	if originalMap, err = set.Copy(); err != nil {
@@ -238,10 +239,10 @@ func (set *IntSet) Sort() error {
 }
 
 // ReverseSort - Sort element in descending mode
-func (set *IntSet) ReverseSort() error {
+func (set *Uint16Set) ReverseSort() error {
 	var (
-		originalMap IntSet
-		keys        []int
+		originalMap Uint16Set
+		keys        []uint16
 		err         error
 	)
 	if originalMap, err = set.Copy(); err != nil {
@@ -267,12 +268,12 @@ func (set *IntSet) ReverseSort() error {
 	Methods to manipulate a set object
 */
 
-func (set *IntSet) Copy() (IntSet, error) {
+func (set *Uint16Set) Copy() (Uint16Set, error) {
 	if set.IsEmpty() {
 		return nil, errors.New(common.CopyEmpty)
 	}
 
-	elemsCopy := make(IntSet, len(*set))
+	elemsCopy := make(Uint16Set, len(*set))
 
 	for key := range *set {
 		elemsCopy[key] = void{}
@@ -282,12 +283,12 @@ func (set *IntSet) Copy() (IntSet, error) {
 }
 
 // ToSlice - Returns a slice of native datatype from the map set
-func (set *IntSet) ToSlice() ([]int, error) {
+func (set *Uint16Set) ToSlice() ([]uint16, error) {
 	if set.IsEmpty() {
 		return nil, errors.New(common.EmptySet)
 	}
 
-	result := make([]int, len(*set))
+	result := make([]uint16, len(*set))
 	for k := range *set {
 		result = append(result, k)
 	}
@@ -295,10 +296,10 @@ func (set *IntSet) ToSlice() ([]int, error) {
 }
 
 // ToSet - Returns a Set entities
-func (set *IntSet) ToSet() (s.IntSet, error) {
+func (set *Uint16Set) ToSet() (stype.Uint16Set, error) {
 	var (
-		slice  []int
-		result s.IntSet
+		slice  []uint16
+		result stype.Uint16Set
 		err    error
 	)
 
@@ -306,6 +307,6 @@ func (set *IntSet) ToSet() (s.IntSet, error) {
 		return nil, err
 	}
 
-	result, _ = s.NewIntSet(slice...)
+	result, _ = s.New().Uint16(slice...)
 	return result, nil
 }

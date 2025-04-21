@@ -11,8 +11,8 @@ import (
 
 type StringSet map[string]void
 
-// String32 - Create a new empty set or from a slice
-func (m MapSet) String32(elems ...string) (StringSet, error) {
+// String - Create a new empty set or from a slice
+func (m MapSet) String(elems ...string) (StringSet, error) {
 	set := StringSet{}
 
 	if len(elems) == 0 {

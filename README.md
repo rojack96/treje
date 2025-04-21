@@ -20,7 +20,7 @@ A lightweight, idiomatic and extensible collection of data structures in Go.
 - `Min()`
 - `Max()`
 - `Max()`
-- `Sum()` (for numbers) or `Concat(separator string)` for string 
+- `Sum()` (numbers) or `Concat(separator string)` (string) 
 - `Sort()`
 - `ReverseSort()`
 - `Copy()`
@@ -35,9 +35,9 @@ go get github.com/rojack96/treje
 ## 🧪 Example
 
 ```go
-A := set.NewInt8Set(1, 2, 3)
+A := treje.NewSet().Int8(1, 2, 3)
 A.Add(4)
-B := set.NewInt8Set(3, 4, 5)
+B := treje.NewSet().Int8(3, 4, 5)
 
 diff := A.Difference(B) // [1 2]
 
@@ -47,7 +47,7 @@ fmt.Println("Difference:", diff)
 ## 📚 Planned Additions
 
 - [x] Set
-- [ ] MapSet (Set backed by map for performance)
+- [x] MapSet (Set backed by map for performance)
 - [ ] Stack
 - [ ] Queue
 - [ ] Deque

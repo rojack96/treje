@@ -2,11 +2,12 @@
 
 A lightweight, idiomatic and extensible collection of data structures in Go.
 
-> Treje aims to provide clean implementations of common data structures not available in the Go standard library — starting with Set.
+> Treje aims to provide clean implementations of common data structures not available in the Go standard library — starting with Set & MapSet.
 
-## ✨ Features (Current)
+## Features (Current)
 
-✅ Set implementation (e.g. `Int8Set`, `Uint32Set` `StringSet`)  
+✅ Set implementation   
+✅ MapSet implementation  
 ✅ Operations:
 - Manipulation: `Add`, `Remove`, `Discard`, `Pop`
 - Set operations: `Union`, `Intersection`, `Difference`, `SymmetricDifference`
@@ -17,22 +18,19 @@ A lightweight, idiomatic and extensible collection of data structures in Go.
 - `Has()`
 - `IsEmpty()`
 - `Clear()`
-- `Min()`
-- `Max()`
-- `Max()`
-- `Sum()` (numbers) or `Concat(separator string)` (string) 
-- `Sort()`
-- `ReverseSort()`
+- `Min()` & `Max()`
+- `Sum()` (numbers) or `Concat(separator)` (string) 
+- `Sort()` & `ReverseSort()`
 - `Copy()`
 - `ToSlice()`
 
-## 📦 Installation
+## Installation
 
 ```bash
 go get github.com/rojack96/treje
 ```
 
-## 🧪 Example
+## Example
 
 ```go
 A := treje.NewSet().Int8(1, 2, 3)
@@ -44,7 +42,7 @@ diff := A.Difference(B) // [1 2]
 fmt.Println("Difference:", diff)
 ```
 
-## 📚 Planned Additions
+## Planned Additions
 
 - [x] Set
 - [x] MapSet (Set backed by map for performance)
@@ -56,14 +54,15 @@ fmt.Println("Difference:", diff)
 - [ ] Graph
 - [ ] Priority Queue / Heap
 
-## 🔧 Design Goals
+## Design Goals
 
 - Idiomatic Go
+- Datatype first
 - No external dependencies
 - Generic-friendly (Go 1.18+ ready)
 - Focus on clarity and correctness
 - Simple API surface
 
-## 📄 License
+## License
 
 MIT License

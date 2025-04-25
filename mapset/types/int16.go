@@ -70,7 +70,7 @@ func (set *Int16Set) Union(b Int16Set) (Int16Set, error) {
 
 // Intersect - Returns the elements that are present in both input sets.
 func (set *Int16Set) Intersect(b Int16Set) Int16Set {
-	var result Int16Set
+	result := make(Int16Set)
 
 	for k := range *set {
 		if _, ok := b[k]; ok {
@@ -84,7 +84,7 @@ func (set *Int16Set) Intersect(b Int16Set) Int16Set {
 // Difference - Returns the elements that are present in the first set
 // but not in the second set.
 func (set *Int16Set) Difference(b Int16Set) Int16Set {
-	var result Int16Set
+	result := make(Int16Set)
 
 	for k := range *set {
 		if _, ok := b[k]; !ok {

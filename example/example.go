@@ -9,22 +9,18 @@ import (
 
 func main() {
 
-	A, err := treje.NewSet().Int8()
+	A, err := treje.NewMapSet().Int8([]int8{5}...)
 	if err != nil {
 		fmt.Println("A err", err)
-	} else {
-		fmt.Println("A", A)
 	}
 
-	B, err := treje.NewSet().Int8([]int8{5, 4, 2, 9}...)
+	B, err := treje.NewMapSet().Int8([]int8{5, 4, 2, 9}...)
 	if err != nil {
 		fmt.Println("B err", err)
-	} else {
-		fmt.Println("B", B)
 	}
 
-	test := B.Equals(A)
+	test := A.Intersect(B)
 
-	fmt.Println("B unione", test, len(B))
+	fmt.Println("test", test)
 
 }

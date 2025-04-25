@@ -70,7 +70,7 @@ func (set *Int8Set) Union(b Int8Set) (Int8Set, error) {
 
 // Intersect - Returns the elements that are present in both input sets.
 func (set *Int8Set) Intersect(b Int8Set) Int8Set {
-	var result Int8Set
+	result := make(Int8Set)
 
 	for k := range *set {
 		if _, ok := b[k]; ok {
@@ -84,7 +84,7 @@ func (set *Int8Set) Intersect(b Int8Set) Int8Set {
 // Difference - Returns the elements that are present in the first set
 // but not in the second set.
 func (set *Int8Set) Difference(b Int8Set) Int8Set {
-	var result Int8Set
+	result := make(Int8Set)
 
 	for k := range *set {
 		if _, ok := b[k]; !ok {

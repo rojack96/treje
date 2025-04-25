@@ -70,7 +70,7 @@ func (set *Uint32Set) Union(b Uint32Set) (Uint32Set, error) {
 
 // Intersect - Returns the elements that are present in both input sets.
 func (set *Uint32Set) Intersect(b Uint32Set) Uint32Set {
-	var result Uint32Set
+	result := make(Uint32Set)
 
 	for k := range *set {
 		if _, ok := b[k]; ok {
@@ -84,7 +84,7 @@ func (set *Uint32Set) Intersect(b Uint32Set) Uint32Set {
 // Difference - Returns the elements that are present in the first set
 // but not in the second set.
 func (set *Uint32Set) Difference(b Uint32Set) Uint32Set {
-	var result Uint32Set
+	result := make(Uint32Set)
 
 	for k := range *set {
 		if _, ok := b[k]; !ok {

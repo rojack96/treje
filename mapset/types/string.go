@@ -71,7 +71,7 @@ func (set *StringSet) Union(b StringSet) (StringSet, error) {
 
 // Intersect - Returns the elements that are present in both input sets.
 func (set *StringSet) Intersect(b StringSet) StringSet {
-	var result StringSet
+	result := make(StringSet)
 
 	for k := range *set {
 		if _, ok := b[k]; ok {
@@ -85,7 +85,7 @@ func (set *StringSet) Intersect(b StringSet) StringSet {
 // Difference - Returns the elements that are present in the first set
 // but not in the second set.
 func (set *StringSet) Difference(b StringSet) StringSet {
-	var result StringSet
+	result := make(StringSet)
 
 	for k := range *set {
 		if _, ok := b[k]; !ok {

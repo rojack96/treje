@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	A, err := treje.NewMapSet().Int8([]int8{5}...)
+	A, err := treje.NewMapSet().Int8([]int8{7}...)
 	if err != nil {
 		fmt.Println("A err", err)
 	}
@@ -19,8 +19,9 @@ func main() {
 		fmt.Println("B err", err)
 	}
 
-	test := A.Intersect(B)
+	test, _ := A.Union(B)
+	B.Sort()
 
-	fmt.Println("test", test)
+	fmt.Println("test", test, B)
 
 }

@@ -288,7 +288,7 @@ func (set *Int64Set) ToSlice() ([]int64, error) {
 		return nil, errors.New(common.EmptySet)
 	}
 
-	result := make([]int64, len(*set))
+	result := make([]int64, 0)
 	for k := range *set {
 		result = append(result, k)
 	}

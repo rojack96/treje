@@ -288,7 +288,7 @@ func (set *Uint8Set) ToSlice() ([]uint8, error) {
 		return nil, errors.New(common.EmptySet)
 	}
 
-	result := make([]uint8, len(*set))
+	result := make([]uint8, 0)
 	for k := range *set {
 		result = append(result, k)
 	}
